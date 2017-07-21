@@ -34,9 +34,9 @@ class musicbrainz
 			$this->error='Invalid XML';
 			return false;
 		}
-		if(!empty($xml->text))
+		if(!empty($xml->message))
 		{
-			$this->error=implode("\n",(array)$xml->text);
+			$this->error='Musicbrainz returned message: '.implode("\n",(array)$xml->message->text);
 			return false;
 		}
 		return $xml;

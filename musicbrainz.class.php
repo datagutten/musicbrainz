@@ -1,15 +1,18 @@
 <?Php
 require_once 'tools/DOMDocument_createElement_simple.php';
+require_once 'tools/dependcheck.php';
 class musicbrainz
 {
 	public $ch;
 	public $error;
 	public $last_request_time;
+	public $depend;
 	function __construct()
 	{
 		$this->ch=curl_init();
 		curl_setopt($this->ch,CURLOPT_RETURNTRANSFER,true);
-		curl_setopt($this->ch,CURLOPT_USERAGENT,'dataguttenDev/0.0.0 ( datagutten@datagutten.net )');
+		curl_setopt($this->ch,CURLOPT_USERAGENT,'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )');
+		$this->depend=new dependcheck;
 	}
 	function api_request($uri)
 	{
@@ -27,12 +30,22 @@ class musicbrainz
 		}
 		$xml=simplexml_load_string($xml_string);
 		if($xml===false)
-			throw new Exception('Invalid XML');
+		{
+			$this->error='Invalid XML';
+			return false;
+		}
+		if(!empty($xml->text))
+		{
+			$this->error=implode("\n",(array)$xml->text);
+			return false;
+		}
 		return $xml;
 	}
-	private function lookup_isrc($isrc)
+
+	//Find track by ISRC
+	function lookup_isrc($isrc,$inc='releases')
 	{
-		$xml=$this->api_request(sprintf('/isrc/%s?inc=releases',$isrc));
+		$xml=$this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc));
 		if(isset($xml->text)/* && $xml->text[0]=='Not found'*/)
 		{
 			$this->error=sprintf('ISRC %s not found',$isrc);
@@ -40,6 +53,8 @@ class musicbrainz
 		}
 		return $xml;
 	}
+
+	//Find track by ISRC and cache the result
 	function lookup_isrc_cache($isrc)
 	{
 		$cachedir=__DIR__.'/isrc_cache';
@@ -65,19 +80,18 @@ class musicbrainz
 		elseif(!empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
 			$id=$id_or_metadata['MUSICBRAINZ_ALBUMID'];
 		else
+		{
+			$this->error='Parameter has invalid data type: '.gettype($id_or_metadata);
 			return false;
+		}
+
 		//curl_setopt($this->ch,CURLOPT_URL,'http://musicbrainz.org/ws/2/release/'.$id.'?inc='.$include);
 		$release=$this->api_request('/release/'.$id.'?inc='.$include);
-		/*$release_xml=curl_exec($this->ch);
-		$release=simplexml_load_string($release_xml);*/
 		if($release===false)
-			throw new Exception($this->error);
+			return false;
 		return $release;
 	}
-
-//die($info);
-/*$xml=simplexml_load_string($info);
-var_dump($xml->File->track->MUSICBRAINZ_RELEASEGROUPID);*/
+	//Find the first flac file in a folder
 	function firstfile($dir)
 	{
 		$file=glob(sprintf('/%s/01*.flac',$dir));
@@ -90,6 +104,8 @@ var_dump($xml->File->track->MUSICBRAINZ_RELEASEGROUPID);*/
 		}
 			
 	}
+
+	//Get metadata from a file using metaflac
 	function metadata($file)
 	{
 		if(is_dir($file))
@@ -119,6 +135,7 @@ var_dump($xml->File->track->MUSICBRAINZ_RELEASEGROUPID);*/
 		return $tags;
 		//MISSING: Check tags for duplicate words (Split by - or space)
 	}
+
 	/* Submit ISRCs for a release
 	First argument should be an array with track numbers as keys and ISRCs as values
 	Second argument should be the return of getrelease() with 'recordings' as second parameter
@@ -127,7 +144,16 @@ var_dump($xml->File->track->MUSICBRAINZ_RELEASEGROUPID);*/
 	{
 		$dom=new DOMDocumentCustom;
 		$dom->formatOutput=true;
-
+		if(!is_object($release))
+		{
+			$this->error='$release is not object';
+			return false;
+		}
+		if(empty($release->release->{'medium-list'}))
+		{
+			$this->error='$release does not contain mediums';
+			return false;
+		}
 		$metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
 		$recording_list=$dom->createElement_simple('recording-list',$metadata);
 		$mediumkey=0;
@@ -160,13 +186,16 @@ var_dump($xml->File->track->MUSICBRAINZ_RELEASEGROUPID);*/
 	{
 		require 'config.php';
 		curl_setopt($this->ch,CURLOPT_HTTPAUTH,CURLAUTH_DIGEST);
-		curl_setopt($this->ch,CURLOPT_USERPWD,sprintf($config['username'],$config['password']));
+		curl_setopt($this->ch,CURLOPT_USERPWD,sprintf('%s:%s',$config['username'],$config['password']));
 		curl_setopt($this->ch,CURLOPT_POSTFIELDS,$xml);
 		//curl_setopt( $this->ch, CURLOPT_POST, true );
 
 		curl_setopt($this->ch,CURLOPT_HTTPHEADER,array('Content-Type: text/xml'));
-		return $this->api_request('/recording/?client=tidal.isrc.submit-0.0.1');
+		$return=$this->api_request('/recording/?client=isrc.submit-0.0.1');
+		//Reset cURL
+		curl_setopt($this->ch,CURLOPT_HTTPGET,true);
+		curl_setopt($this->ch,CURLOPT_HTTPAUTH,false);
+
+		return $return;
 	}	
 }
-/*$mb=new musicbrainz;
-echo $mb->build_description($file);*/

@@ -1,7 +1,5 @@
 <?Php
-//$path='/mnt/ext4/Musikk/Karpe Diem - Diskografi/Karpe Diem - Rett fra hjertet (2006) FLAC PHP';
-
-//$info=shell_exec("mediainfo --Output=XML \"$file\" 2>&1");
+require_once 'tools/DOMDocument_createElement_simple.php';
 class musicbrainz
 {
 	public $ch;

@@ -174,27 +174,26 @@ class musicbrainz
 		}
 		$metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
 		$recording_list=$dom->createElement_simple('recording-list',$metadata);
-		$mediumkey=0;
+		$medium_number=1;
 		foreach($release->release->{'medium-list'}->medium as $medium)
 		{
-			if($mediumkey>0)
-				die("Multi disc need testing");
 			foreach($medium->{'track-list'}->track as $track)
 			{
 				$recording_id=(string)$track->recording->attributes()['id'];
-				$position=(int)$track->position;
-
+				$track_number=$medium_number.'-'.$track->position;
 				$recording=$dom->createElement_simple('recording',$recording_list,array('id'=>$recording_id));
 				$isrc_list=$dom->createElement_simple('isrc-list',$recording,array('count'=>'1'));
-				if(!isset($isrc_tracks[$position]))
-					die('Track count mismatch');
-				$isrc=$isrc_tracks[$position];
+				if(!isset($isrc_tracks[$track_number]))
+				{
+					$this->error=sprintf('Track count mismatch, track %s not found',$track_number);
+					return false;
+				}
+				$isrc=$isrc_tracks[$track_number];
 				$dom->createElement_simple('isrc',$isrc_list,array('id'=>$isrc));
-
-				//$recording[$mediumkey][$position]=$recording_id;
 			}
-			$mediumkey++;
+			$medium_number++;
 		}
+
 		return $dom->saveXML($metadata);
 	}
 	/* Submit ISRCs for a release
@@ -210,6 +209,8 @@ class musicbrainz
 
 		curl_setopt($this->ch,CURLOPT_HTTPHEADER,array('Content-Type: text/xml'));
 		$return=$this->api_request('/recording/?client=isrc.submit-0.0.1');
+		if($return===false)
+			$this->error='Error sending ISRC list to MusicBrainz: '.$this->error;
 		//Reset cURL
 		curl_setopt($this->ch,CURLOPT_HTTPGET,true);
 		curl_setopt($this->ch,CURLOPT_HTTPAUTH,false);

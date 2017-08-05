@@ -24,15 +24,25 @@ class musicbrainz
 
 		$xml_string=curl_exec($this->ch);
 		$this->last_request_time=microtime(true);
+		if(substr($xml_string,0,1)=='{' && substr($xml_string,-1,1)=='}') //Server returned JSON
+		{
+			$this->error=print_r(json_decode($xml_string,true),true);
+			return false;
+		}
 		if($xml_string===false)
 		{
 			$this->error=curl_error($this->ch);
 			return false;
 		}
 		$xml=simplexml_load_string($xml_string);
+		if(!empty($xml->body)) //Server returned HTML
+		{
+			$this->error=(string)$xml->body->p;
+			return false;
+		}
 		if($xml===false)
 		{
-			$this->error='Invalid XML';
+			$this->error='Invalid XML: '.$xml_string;
 			return false;
 		}
 		if(!empty($xml->message))

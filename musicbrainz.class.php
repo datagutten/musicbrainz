@@ -102,6 +102,8 @@ class musicbrainz
 		$file=glob(sprintf('/%s/01*.flac',$dir));
 		if(!empty($file))
 			return $file[0];
+		elseif(!empty($file=glob(sprintf('/%s/1-01*.flac',$dir))))
+			return $file[0];
 		else
 		{
 			$this->error='Unable to find first file in '.$dir;

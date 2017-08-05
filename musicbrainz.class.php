@@ -17,12 +17,13 @@ class musicbrainz
 	function api_request($uri)
 	{
 		curl_setopt($this->ch,CURLOPT_URL,'https://musicbrainz.org/ws/2'.$uri);
-
-		if($this->last_request_time==time())
-			sleep(1);
+		$time=microtime(true);
+		$diff=microtime(true)-$this->last_request_time;
+		if($diff<1)
+			time_sleep_until($this->last_request_time+1);
 
 		$xml_string=curl_exec($this->ch);
-		$this->last_request_time=time();
+		$this->last_request_time=microtime(true);
 		if($xml_string===false)
 		{
 			$this->error=curl_error($this->ch);

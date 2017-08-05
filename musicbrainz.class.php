@@ -86,7 +86,7 @@ class musicbrainz
 			$id=$id_or_metadata['MUSICBRAINZ_ALBUMID'];
 		else
 		{
-			$this->error='Parameter has invalid data type: '.gettype($id_or_metadata);
+			throw new Exception('Parameter has invalid data type: '.gettype($id_or_metadata));
 			return false;
 		}
 

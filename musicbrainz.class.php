@@ -38,10 +38,9 @@ class musicbrainz
 			$this->error=(string)$xml->body->p;
 			return false;
 		}
-		if($xml===false)
+		if(empty($xml))
 		{
-			$this->error='Invalid XML: '.$xml_string;
-			return false;
+			throw new Exception('Invalid XML: '.$xml_string);
 		}
 		if(!empty($xml->message))
 		{

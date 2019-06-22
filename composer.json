@@ -2,6 +2,9 @@
     "name": "datagutten/musicbrainz",
     "description": "PHP class and tools to work with data on musicbrainz.org",
     "type": "library",
+    "require": {
+        "datagutten/tools": "^1.1"
+    },
     "license": "GPL-3.0-or-later",
     "authors": [
         {

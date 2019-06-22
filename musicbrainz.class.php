@@ -1,6 +1,5 @@
 <?Php
-require_once 'tools/DOMDocument_createElement_simple.php';
-require_once 'tools/dependcheck.php';
+require_once 'vendor/autoload.php';
 class musicbrainz
 {
 	public $ch;
@@ -12,7 +11,6 @@ class musicbrainz
 		$this->ch=curl_init();
 		curl_setopt($this->ch,CURLOPT_RETURNTRANSFER,true);
 		curl_setopt($this->ch,CURLOPT_USERAGENT,'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )');
-		$this->depend=new dependcheck;
 	}
 	function api_request($uri)
 	{

@@ -168,6 +168,28 @@ class musicbrainz
 		//MISSING: Check tags for duplicate words (Split by - or space)
 	}
 
+    /**
+     * Build ISRC list from array
+     * @param array $array Array with id as key and ISRC as value
+     * @return string
+     */
+    function build_isrc_list_array($array)
+    {
+        $dom=new DOMDocumentCustom;
+        $dom->formatOutput=true;
+
+        $metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
+        $recording_list=$dom->createElement_simple('recording-list',$metadata);
+
+        foreach($array as $recording_id=>$isrc)
+        {
+            $recording=$dom->createElement_simple('recording',$recording_list,array('id'=>$recording_id));
+            $isrc_list=$dom->createElement_simple('isrc-list',$recording,array('count'=>'1'));
+            $dom->createElement_simple('isrc',$isrc_list,array('id'=>$isrc));
+        }
+        return $dom->saveXML($metadata);
+    }
+
 	/* Submit ISRCs for a release
 	First argument should be an array with track numbers as keys and ISRCs as values
 	Second argument should be the return of getrelease() with 'recordings' as second parameter

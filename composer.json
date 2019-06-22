@@ -1,0 +1,12 @@
+{
+    "name": "datagutten/musicbrainz",
+    "description": "PHP class and tools to work with data on musicbrainz.org",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "datagutten",
+            "email": "datagutten@datagutten.net"
+        }
+    ]
+}

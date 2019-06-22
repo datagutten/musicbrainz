@@ -91,12 +91,15 @@ class musicbrainz
 	{
 		if(is_string($id_or_metadata))
 			$id=$id_or_metadata;
+		if(is_array($id_or_metadata) && empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
+		{
+            throw new InvalidArgumentException('Tag MUSICBRAINZ_ALBUMID not set');
+	   	}
 		elseif(!empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
 			$id=$id_or_metadata['MUSICBRAINZ_ALBUMID'];
 		else
 		{
-			throw new Exception('Parameter has invalid data type: '.gettype($id_or_metadata));
-			return false;
+			throw new InvalidArgumentException('Parameter has invalid data type: '.gettype($id_or_metadata));
 		}
 
 		//curl_setopt($this->ch,CURLOPT_URL,'http://musicbrainz.org/ws/2/release/'.$id.'?inc='.$include);

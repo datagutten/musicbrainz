@@ -55,6 +55,21 @@ class musicbrainz
 		return $xml;
 	}
 
+    function api_request_json($uri)
+    {
+        $url='https://musicbrainz.org/ws/2'.$uri.'&fmt=json';
+        $string=$this->get($url);
+        if($string===false)
+            return false;
+        $data=json_decode($string,true);
+        if(isset($data['error']))
+        {
+            //TODO: Add custom MusicBrainzException
+            throw new Exception($data['error']);
+        }
+        return $data;
+    }
+
 	//Find track by ISRC
 	function lookup_isrc($isrc,$inc='releases')
 	{
@@ -86,7 +101,7 @@ class musicbrainz
 		}
 	}
 
-	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels')
+	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)
 	{
 		if(is_string($id_or_metadata))
 			$id=$id_or_metadata;
@@ -101,11 +116,10 @@ class musicbrainz
 			throw new InvalidArgumentException('Parameter has invalid data type: '.gettype($id_or_metadata));
 		}
 
-		//curl_setopt($this->ch,CURLOPT_URL,'http://musicbrainz.org/ws/2/release/'.$id.'?inc='.$include);
-		$release=$this->api_request('/release/'.$id.'?inc='.$include);
-		if($release===false)
-			return false;
-		return $release;
+        if($json)
+            return $this->api_request_json('/release/'.$id.'?inc='.$include);
+        else
+            return $this->api_request('/release/'.$id.'?inc='.$include);
 	}
 	//Find the first flac file in a folder
 	function firstfile($dir)

@@ -11,5 +11,8 @@
             "name": "datagutten",
             "email": "datagutten@datagutten.net"
         }
-    ]
+    ],
+    "autoload": {
+        "classmap": ["musicbrainz.class.php"]
+    }
 }

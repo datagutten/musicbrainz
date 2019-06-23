@@ -20,16 +20,40 @@ class musicbrainz
             array(),
             array('useragent'=>'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )'));
 	}
-	function api_request($uri)
-	{
-		curl_setopt($this->ch,CURLOPT_URL,'https://musicbrainz.org/ws/2'.$uri);
-		$time=microtime(true);
-		$diff=microtime(true)-$this->last_request_time;
-		if($diff<1)
-			time_sleep_until($this->last_request_time+1);
 
-		$xml_string=curl_exec($this->ch);
-		$this->last_request_time=microtime(true);
+    /**
+     * Do a HTTP GET to MusicBrainz
+     * @param $url
+     * @return string
+     * @throws Exception
+     */
+    function get($url)
+    {
+        if($this->last_request_time!==false) //Do not sleep on first execution
+        {
+            $diff=microtime(true)-$this->last_request_time;
+		    if($diff<1)
+				time_sleep_until($this->last_request_time+1);
+        }
+        $response = $this->session->get($url);
+        $this->last_request_time=microtime(true);
+        if($response->status_code===200)
+            return $response->body;
+        else
+            throw new Exception(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body));
+    }
+
+    /**
+     * @param $uri
+     * @return SimpleXMLElement
+     * @throws MusicBrainzException
+     * @throws Exception
+     */
+    function api_request($uri)
+    {
+        $url='https://musicbrainz.org/ws/2'.$uri;
+        $xml_string=$this->get($url);
+        $xml_string=trim($xml_string);
 		if(substr($xml_string,0,1)=='{' && substr($xml_string,-1,1)=='}') //Server returned JSON
         {
             $data=json_decode($xml_string,true);

@@ -31,20 +31,17 @@ class musicbrainz
 		$xml_string=curl_exec($this->ch);
 		$this->last_request_time=microtime(true);
 		if(substr($xml_string,0,1)=='{' && substr($xml_string,-1,1)=='}') //Server returned JSON
-		{
-			$this->error=print_r(json_decode($xml_string,true),true);
-			return false;
-		}
-		if($xml_string===false)
-		{
-			$this->error=curl_error($this->ch);
-			return false;
+        {
+            $data=json_decode($xml_string,true);
+            if(!empty($data['error']))
+                throw new MusicBrainzException($data['error']);
+            else
+                return $data;
 		}
 		$xml=simplexml_load_string($xml_string);
 		if(!empty($xml->body)) //Server returned HTML
 		{
-			$this->error=(string)$xml->body->p;
-			return false;
+			throw new MusicBrainzException((string)$xml->body->p);
 		}
 		if(empty($xml))
 		{
@@ -57,8 +54,7 @@ class musicbrainz
 		}
 		if(!empty($xml->text))
 		{
-			$this->error="Musicbrainz returned text:\n".implode("\n",(array)$xml->text);
-			return false;
+			throw new MusicBrainzException("Musicbrainz returned text:\n".implode("\n",(array)$xml->text));
 		}
 		return $xml;
 	}
@@ -240,9 +236,16 @@ class musicbrainz
 
 		return $dom->saveXML($metadata);
 	}
-	/* Submit ISRCs for a release
-	Argument should be a XML string returned by build_isrc_list()
+	/*
+	Argument should be a
 	*/
+
+    /**
+     * Submit ISRCs for a release
+     * @param string $xml XML string returned by build_isrc_list()
+     * @return SimpleXMLElement
+     * @throws MusicBrainzException
+     */
 	function send_isrc_list($xml)
 	{
 		require 'config.php';

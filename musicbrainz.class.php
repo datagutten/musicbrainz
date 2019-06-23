@@ -6,11 +6,19 @@ class musicbrainz
 	public $error;
 	public $last_request_time;
 	public $depend;
+    /**
+     * @var Requests_Session
+     */
+	public $session;
 	function __construct()
 	{
 		$this->ch=curl_init();
 		curl_setopt($this->ch,CURLOPT_RETURNTRANSFER,true);
 		curl_setopt($this->ch,CURLOPT_USERAGENT,'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )');
+        $this->session = new Requests_Session(
+            'https://musicbrainz.org/ws/2',
+            array(),
+            array('useragent'=>'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )'));
 	}
 	function api_request($uri)
 	{

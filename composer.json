@@ -3,7 +3,8 @@
     "description": "PHP class and tools to work with data on musicbrainz.org",
     "type": "library",
     "require": {
-        "datagutten/tools": "^1.1"
+        "datagutten/tools": "^1.1",
+        "rmccue/requests": "^1.7"
     },
     "license": "GPL-3.0-or-later",
     "authors": [

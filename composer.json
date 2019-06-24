@@ -17,6 +17,6 @@
         }
     ],
     "autoload": {
-        "classmap": ["musicbrainz.class.php"]
+        "classmap": ["musicbrainz.class.php", "Digest.php", "MusicBrainzException.php"]
     }
 }

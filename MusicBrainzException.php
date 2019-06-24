@@ -8,8 +8,9 @@
 
 class MusicBrainzException extends Exception
 {
-    public function __construct($message, $code = 0, Exception $previous = null) {
-        //$message = sprintf('File does not exist: %s', $file);
+    public $response;
+    public function __construct($message, $response, $code = 0, Exception $previous = null) {
+        $this->response = $response;
         parent::__construct($message, $code, $previous);
     }
 }

@@ -38,10 +38,7 @@ class musicbrainz
         }
         $response = $this->session->get($url);
         $this->last_request_time=microtime(true);
-        if($response->status_code===200)
-            return $response;
-        else
-            throw new Exception(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body));
+        return $response;
     }
 
     /**

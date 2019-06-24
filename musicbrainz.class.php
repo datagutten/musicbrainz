@@ -24,9 +24,9 @@ class musicbrainz
 
     /**
      * Do a HTTP GET to MusicBrainz
-     * @param $url
-     * @return string
-     * @throws Exception
+     * @param string $url URL
+     * @return Requests_Response
+     * @throws Exception HTTP response code not 200
      */
     function get($url)
     {
@@ -39,76 +39,65 @@ class musicbrainz
         $response = $this->session->get($url);
         $this->last_request_time=microtime(true);
         if($response->status_code===200)
-            return $response->body;
+            return $response;
         else
             throw new Exception(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body));
     }
 
     /**
-     * @param $uri
-     * @return SimpleXMLElement
+     * @param string $uri URI
+     * @param bool $json Fetch as json
+     * @return array|SimpleXMLElement Returns array if $json=true
      * @throws MusicBrainzException
      * @throws Exception
      */
-    function api_request($uri)
+    function api_request($uri, $json=false)
     {
         $url='https://musicbrainz.org/ws/2'.$uri;
-        $xml_string=$this->get($url);
-        $xml_string=trim($xml_string);
-		if(substr($xml_string,0,1)=='{' && substr($xml_string,-1,1)=='}') //Server returned JSON
-        {
-            $data=json_decode($xml_string,true);
-            if(!empty($data['error']))
-                throw new MusicBrainzException($data['error']);
-            else
-                return $data;
-		}
-		$xml=simplexml_load_string($xml_string);
-		if(!empty($xml->body)) //Server returned HTML
-		{
-			throw new MusicBrainzException((string)$xml->body->p);
-		}
-		if(empty($xml))
-		{
-			throw new Exception('Invalid XML: '.$xml_string);
-		}
-		if(!empty($xml->message))
-		{
-			$this->error="Musicbrainz returned message:\n".implode("\n",(array)$xml->message->text);
-			return;
-		}
-		if(!empty($xml->text))
-		{
-			throw new MusicBrainzException("Musicbrainz returned text:\n".implode("\n",(array)$xml->text));
-		}
-		return $xml;
+        if($json)
+            $url.='&fmt=json';
+        return $this->handle_response($this->get($url));
 	}
 
-    function api_request_json($uri)
+    /**
+     * Handle response from MusicBrainz
+     * @param Requests_Response $response
+     * @throws MusicBrainzException Error from MusicBrainz
+     * @return array|SimpleXMLElement
+     */
+	public static function handle_response($response)
     {
-        $url='https://musicbrainz.org/ws/2'.$uri.'&fmt=json';
-        $string=$this->get($url);
-        if($string===false)
-            return false;
-        $data=json_decode($string,true);
-        if(isset($data['error']))
+        if($response->body[0]=='{')
         {
-            //TODO: Add custom MusicBrainzException
-            throw new Exception($data['error']);
+            $data = json_decode($response->body, true);
+            if(!empty($data['error']))
+                throw new MusicBrainzException($data['error'], $response);
+            else
+                return $data;
         }
-        return $data;
+        elseif(substr($response->body, 0, 5)==='<?xml')
+        {
+            $data = simplexml_load_string($response->body);
+
+            if(!empty($data->{'text'}))
+                throw new MusicBrainzException($data->{'text'}[0], $response);
+            else
+                return $data;
+        }
+        else
+            throw new MusicBrainzException("Unknown response format", $response);
     }
 
-	//Find track by ISRC
+    /**
+     * Find recording by ISRC
+     * @param string $isrc ISRC to find
+     * @param string $inc
+     * @return array
+     * @throws MusicBrainzException
+     */
 	function lookup_isrc($isrc,$inc='releases')
 	{
-		$xml=$this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc));
-		if(isset($xml->text)/* && $xml->text[0]=='Not found'*/)
-		{
-			$this->error=sprintf('ISRC %s not found',$isrc);
-			return false;
-		}
-		return $xml;
+		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc));
 	}
 
 	//Find track by ISRC and cache the result
@@ -145,10 +134,7 @@ class musicbrainz
 			throw new InvalidArgumentException('Parameter has invalid data type: '.gettype($id_or_metadata));
 		}
 
-        if($json)
-            return $this->api_request_json('/release/'.$id.'?inc='.$include);
-        else
-            return $this->api_request('/release/'.$id.'?inc='.$include);
+		return $this->api_request('/release/'.$id.'?inc='.$include, $json);
 	}
 	//Find the first flac file in a folder
 	function firstfile($dir)

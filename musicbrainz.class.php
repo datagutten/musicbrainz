@@ -133,7 +133,7 @@ class musicbrainz
 	{
 		if(is_string($id_or_metadata))
 			$id=$id_or_metadata;
-		if(is_array($id_or_metadata) && empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
+		elseif(is_array($id_or_metadata) && empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
 		{
             throw new InvalidArgumentException('Tag MUSICBRAINZ_ALBUMID not set');
 	   	}

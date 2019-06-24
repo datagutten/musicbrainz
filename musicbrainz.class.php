@@ -260,7 +260,7 @@ class musicbrainz
 	function send_isrc_list($xml)
 	{
 		$config = require 'config.php';
-		$options = array('auth'=>new Requests_Auth_Digest(array($config['username'], $config['password'])));
+		$options = array('auth'=>new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
         $response = $this->session->post('/ws/2/recording/?client=datagutten-musicbrainz-'.$this->version.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
         return $this->handle_response($response);
 	}

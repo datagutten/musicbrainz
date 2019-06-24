@@ -126,7 +126,7 @@ class musicbrainz
      * @param string|array $id_or_metadata ID string or metadata array
      * @param string $include
      * @param bool $json Fetch as json
-     * @return array
+     * @return array|SimpleXMLElement Return SimpleXmlElement if $json=false
      * @throws MusicBrainzException
      */
 	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)

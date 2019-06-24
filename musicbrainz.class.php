@@ -10,6 +10,7 @@ class musicbrainz
      * @var Requests_Session
      */
 	public $session;
+	public $version = '2.0';
 	function __construct()
 	{
 		$this->ch=curl_init();
@@ -18,7 +19,7 @@ class musicbrainz
         $this->session = new Requests_Session(
             'https://musicbrainz.org/ws/2',
             array(),
-            array('useragent'=>'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )'));
+            array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
 	}
 
     /**

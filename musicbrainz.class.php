@@ -92,7 +92,7 @@ class musicbrainz
      * Find recording by ISRC
      * @param string $isrc ISRC to find
      * @param string $inc
-     * @return array
+     * @return SimpleXMLElement
      * @throws MusicBrainzException
      */
 	function lookup_isrc($isrc,$inc='releases')
@@ -100,25 +100,35 @@ class musicbrainz
 		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc));
 	}
 
-	//Find track by ISRC and cache the result
+    /**
+     * Find recording by ISRC and cache the result
+     * @param string $isrc ISRC to find
+     * @return SimpleXMLElement
+     * @throws MusicBrainzException
+     */
 	function lookup_isrc_cache($isrc)
 	{
-		$cachedir=__DIR__.'/isrc_cache';
-		if(file_exists($cachefile=$cachedir.'/'.$isrc.'.xml'))
-			return simplexml_load_file($cachefile);
+		$cache_dir=__DIR__.'/isrc_cache';
+		if(file_exists($cache_file=$cache_dir.'/'.$isrc.'.xml'))
+			return simplexml_load_file($cache_file);
 		else
 		{
 			$xml=$this->lookup_isrc($isrc);
-			//$xml=false;
-			if($xml===false)
-				return false;
-			if(!file_exists($cachedir))
-				mkdir($cachedir);
-			$xml->asXML($cachefile);
+			if(!file_exists($cache_dir))
+				mkdir($cache_dir);
+			$xml->asXML($cache_file);
 			return $xml;
 		}
 	}
 
+    /**
+     * Get release information
+     * @param string|array $id_or_metadata ID string or metadata array
+     * @param string $include
+     * @param bool $json Fetch as json
+     * @return array
+     * @throws MusicBrainzException
+     */
 	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)
 	{
 		if(is_string($id_or_metadata))
@@ -136,8 +146,14 @@ class musicbrainz
 
 		return $this->api_request('/release/'.$id.'?inc='.$include, $json);
 	}
-	//Find the first flac file in a folder
-	function firstfile($dir)
+
+    /**
+     * Find the first flac file in a folder
+     * @param string $dir Directory to search
+     * @return string File name
+     * @throws Exception File not found
+     */
+	public static function firstfile($dir)
 	{
 		$file=glob(sprintf('/%s/01*.flac',$dir));
 		if(!empty($file))
@@ -165,22 +181,25 @@ class musicbrainz
 		return $metadata;
 	}
 
+    /**
+     * Get tags
+     * @param SimpleXMLElement $xml
+     * @return array
+     */
 	function tags($xml)
 	{
-		if(empty($xml->release->{'artist-credit'}->{'name-credit'}->artist->{'tag-list'}))
-			return false;
-		foreach($xml->release->{'artist-credit'}->{'name-credit'}->artist->{'tag-list'}->tag as $tag)
+		if(empty($xml->{'release'}->{'artist-credit'}->{'name-credit'}->artist->{'tag-list'}))
+			return array();
+		foreach($xml->{'release'}->{'artist-credit'}->{'name-credit'}->artist->{'tag-list'}->tag as $tag)
 		{
-			//print_r($tag->attributes());
-			//print_r($tag);
 			if($tag->attributes()['count']<1)
 				continue;
-			$tags[]=(string)$tag->name;
+			$tags[]=(string)$tag->{'name'};
 		}
 		if(!isset($tags))
-			return false;
+			return array();
 		return $tags;
-		//MISSING: Check tags for duplicate words (Split by - or space)
+		//TODO: Check tags for duplicate words (Split by - or space)
 	}
 
     /**

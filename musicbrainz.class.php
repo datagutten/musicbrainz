@@ -249,9 +249,6 @@ class musicbrainz
 
 		return $dom->saveXML($metadata);
 	}
-	/*
-	Argument should be a
-	*/
 
     /**
      * Submit ISRCs for a release

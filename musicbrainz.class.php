@@ -256,25 +256,15 @@ class musicbrainz
     /**
      * Submit ISRCs for a release
      * @param string $xml XML string returned by build_isrc_list()
-     * @return SimpleXMLElement
+     * @return array
      * @throws MusicBrainzException
+     * @throws Requests_Exception
      */
 	function send_isrc_list($xml)
 	{
-		require 'config.php';
-		curl_setopt($this->ch,CURLOPT_HTTPAUTH,CURLAUTH_DIGEST);
-		curl_setopt($this->ch,CURLOPT_USERPWD,sprintf('%s:%s',$config['username'],$config['password']));
-		curl_setopt($this->ch,CURLOPT_POSTFIELDS,$xml);
-		//curl_setopt( $this->ch, CURLOPT_POST, true );
-
-		curl_setopt($this->ch,CURLOPT_HTTPHEADER,array('Content-Type: text/xml'));
-		$return=$this->api_request('/recording/?client=isrc.submit-0.0.1');
-		if($return===false)
-			$this->error='Error sending ISRC list to MusicBrainz: '.$this->error;
-		//Reset cURL
-		curl_setopt($this->ch,CURLOPT_HTTPGET,true);
-		curl_setopt($this->ch,CURLOPT_HTTPAUTH,false);
-
-		return $return;
-	}	
+		$config = require 'config.php';
+		$options = array('auth'=>new Requests_Auth_Digest(array($config['username'], $config['password'])));
+        $response = $this->session->post('/ws/2/recording/?client=datagutten-musicbrainz-'.$this->version.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
+        return $this->handle_response($response);
+	}
 }

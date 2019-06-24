@@ -168,19 +168,6 @@ class musicbrainz
 			
 	}
 
-	//Get metadata from a file using metaflac
-	function metadata($file)
-	{
-		if(is_dir($file))
-			$file=$this->firstfile($file);
-		if(!is_file($file))
-			return false;
-		$metadata_raw=shell_exec(sprintf('metaflac --list "%s"',$file));
-		preg_match_all('/comment\[[0-9]+\]\: ([A-Z\_]+)=(.+)/',$metadata_raw,$metadata_raw2);
-		$metadata=array_combine($metadata_raw2[1],$metadata_raw2[2]);
-		return $metadata;
-	}
-
     /**
      * Get tags
      * @param SimpleXMLElement $xml

@@ -222,19 +222,19 @@ class musicbrainz
 		{
 			throw new InvalidArgumentException('$release is not object');
 		}
-		if(empty($release->release->{'medium-list'}))
+		if(empty($release->{'release'}->{'medium-list'}))
 		{
             throw new InvalidArgumentException('$release does not contain mediums');
 		}
 		$metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
 		$recording_list=$dom->createElement_simple('recording-list',$metadata);
 		$medium_number=1;
-		foreach($release->release->{'medium-list'}->medium as $medium)
+		foreach($release->{'release'}->{'medium-list'}->medium as $medium)
 		{
-			foreach($medium->{'track-list'}->track as $track)
+			foreach($medium->{'track-list'}->{'track'} as $track)
 			{
-				$recording_id=(string)$track->recording->attributes()['id'];
-				$track_number=$medium_number.'-'.$track->position;
+				$recording_id=(string)$track->{'recording'}->attributes()['id'];
+				$track_number=$medium_number.'-'.$track->{'position'};
 				$recording=$dom->createElement_simple('recording',$recording_list,array('id'=>$recording_id));
 				$isrc_list=$dom->createElement_simple('isrc-list',$recording,array('count'=>'1'));
 				if(!isset($isrc_tracks[$track_number]))

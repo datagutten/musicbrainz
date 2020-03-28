@@ -20,6 +20,6 @@
       "psr-4": {
         "datagutten\\musicbrainz\\": "src"
       },
-        "classmap": ["musicbrainz.class.php", "Digest.php", "MusicBrainzException.php"]
+        "classmap": ["Digest.php"]
     }
 }

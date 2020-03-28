@@ -1,5 +1,17 @@
-<?Php
-require_once 'vendor/autoload.php';
+<?php
+
+
+namespace datagutten\musicbrainz;
+
+
+use DOMDocumentCustom;
+use InvalidArgumentException;
+use Requests_Auth_Digest;
+use Requests_Exception;
+use Requests_Response;
+use Requests_Session;
+use SimpleXMLElement;
+
 class musicbrainz
 {
 	public $ch;
@@ -26,7 +38,7 @@ class musicbrainz
      * Do a HTTP GET to MusicBrainz
      * @param string $url URL
      * @return Requests_Response
-     * @throws MusicBrainzException HTTP response code not 200
+     * @throws exceptions\MusicBrainzException HTTP response code not 200
      */
     function get($url)
     {
@@ -41,15 +53,14 @@ class musicbrainz
 		if($response->status_code===200)
 			return $response;
 		else
-			throw new MusicBrainzException(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body), $response);
+			throw new exceptions\MusicBrainzException(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body), $response);
     }
 
     /**
      * @param string $uri URI
      * @param bool $json Fetch as json
      * @return array|SimpleXMLElement Returns array if $json=true
-     * @throws MusicBrainzException
-     * @throws Exception
+     * @throws exceptions\MusicBrainzException
      */
     function api_request($uri, $json=false)
     {
@@ -62,7 +73,7 @@ class musicbrainz
     /**
      * Handle response from MusicBrainz
      * @param Requests_Response $response
-     * @throws MusicBrainzException Error from MusicBrainz
+     * @throws exceptions\MusicBrainzException Error from MusicBrainz
      * @return array|SimpleXMLElement
      */
 	public static function handle_response($response)
@@ -71,7 +82,7 @@ class musicbrainz
         {
             $data = json_decode($response->body, true);
             if(!empty($data['error']))
-                throw new MusicBrainzException($data['error'], $response);
+                throw new exceptions\MusicBrainzException($data['error'], $response);
             else
                 return $data;
         }
@@ -80,12 +91,12 @@ class musicbrainz
             $data = simplexml_load_string($response->body);
 
             if(!empty($data->{'text'}))
-                throw new MusicBrainzException($data->{'text'}[0], $response);
+                throw new exceptions\MusicBrainzException($data->{'text'}[0], $response);
             else
                 return $data;
         }
         else
-            throw new MusicBrainzException("Unknown response format", $response);
+            throw new exceptions\MusicBrainzException("Unknown response format", $response);
     }
 
     /**
@@ -93,7 +104,7 @@ class musicbrainz
      * @param string $isrc ISRC to find
      * @param string $inc
      * @return SimpleXMLElement
-     * @throws MusicBrainzException
+     * @throws exceptions\MusicBrainzException
      */
 	function lookup_isrc($isrc,$inc='releases')
 	{
@@ -104,7 +115,7 @@ class musicbrainz
      * Find recording by ISRC and cache the result
      * @param string $isrc ISRC to find
      * @return SimpleXMLElement
-     * @throws MusicBrainzException
+     * @throws exceptions\MusicBrainzException
      */
 	function lookup_isrc_cache($isrc)
 	{
@@ -127,7 +138,7 @@ class musicbrainz
      * @param string $include
      * @param bool $json Fetch as json
      * @return array|SimpleXMLElement Return SimpleXmlElement if $json=false
-     * @throws MusicBrainzException
+     * @throws exceptions\MusicBrainzException
      */
 	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)
 	{
@@ -151,7 +162,7 @@ class musicbrainz
      * Find the first flac file in a folder
      * @param string $dir Directory to search
      * @return string File name
-     * @throws Exception File not found
+     * @throws exceptions\MusicBrainzException File not found
      */
 	public static function firstfile($dir)
 	{
@@ -161,7 +172,7 @@ class musicbrainz
 		elseif(!empty($file=glob(sprintf('/%s/1-01*.flac',$dir))))
 			return $file[0];
 		else
-            throw new Exception('Unable to find first file in '.$dir);
+            throw new exceptions\MusicBrainzException('Unable to find first file in '.$dir, null);
 	}
 
     /**
@@ -212,7 +223,7 @@ class musicbrainz
 	 * @param array $isrc_tracks Array with track numbers as keys and ISRCs as values
 	 * @param SimpleXMLElement $release Return of getrelease() with 'recordings' as second parameter
 	 * @return string
-	 * @throws MusicBrainzException
+	 * @throws exceptions\MusicBrainzException
 	 */
 	public static function build_isrc_list($isrc_tracks,$release)
 	{
@@ -239,7 +250,7 @@ class musicbrainz
 				$isrc_list=$dom->createElement_simple('isrc-list',$recording,array('count'=>'1'));
 				if(!isset($isrc_tracks[$track_number]))
 				{
-					throw new MusicBrainzException(sprintf('Track count mismatch, track %s not found',$track_number), null);
+					throw new exceptions\MusicBrainzException(sprintf('Track count mismatch, track %s not found',$track_number), null);
 				}
 				$isrc=$isrc_tracks[$track_number];
 				$dom->createElement_simple('isrc',$isrc_list,array('id'=>$isrc));
@@ -254,7 +265,7 @@ class musicbrainz
      * Submit ISRCs for a release
      * @param string $xml XML string returned by build_isrc_list()
      * @return array Response from MusicBrainz
-     * @throws MusicBrainzException
+     * @throws exceptions\MusicBrainzException
      */
 	function send_isrc_list($xml)
 	{
@@ -264,7 +275,7 @@ class musicbrainz
 			$response = $this->session->post('/ws/2/recording/?client=datagutten-musicbrainz-'.$this->version.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
 		}
 		catch (Requests_Exception $e) {
-			throw new MusicBrainzException($e->getMessage(),'', 0, $e);
+			throw new exceptions\MusicBrainzException($e->getMessage(),'', 0, $e);
 		}
 
         return $this->handle_response($response);

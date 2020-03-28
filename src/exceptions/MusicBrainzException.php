@@ -1,10 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: abi
- * Date: 22.06.2019
- * Time: 17:45
- */
+
+
+namespace datagutten\musicbrainz\exceptions;
+
+
+use Exception;
 
 class MusicBrainzException extends Exception
 {

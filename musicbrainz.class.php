@@ -207,10 +207,13 @@ class musicbrainz
         return $dom->saveXML($metadata);
     }
 
-	/* Submit ISRCs for a release
-	First argument should be an array with track numbers as keys and ISRCs as values
-	Second argument should be the return of getrelease() with 'recordings' as second parameter
-	*/
+	/**
+	 * Build XML for ISRC submission
+	 * @param array $isrc_tracks Array with track numbers as keys and ISRCs as values
+	 * @param SimpleXMLElement $release Return of getrelease() with 'recordings' as second parameter
+	 * @return string
+	 * @throws Exception
+	 */
 	public static function build_isrc_list($isrc_tracks,$release)
 	{
 		$dom=new DOMDocumentCustom;

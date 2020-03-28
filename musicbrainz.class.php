@@ -26,7 +26,7 @@ class musicbrainz
      * Do a HTTP GET to MusicBrainz
      * @param string $url URL
      * @return Requests_Response
-     * @throws Exception HTTP response code not 200
+     * @throws MusicBrainzException HTTP response code not 200
      */
     function get($url)
     {
@@ -38,7 +38,10 @@ class musicbrainz
         }
         $response = $this->session->get($url);
         $this->last_request_time=microtime(true);
-        return $response;
+		if($response->status_code===200)
+			return $response;
+		else
+			throw new MusicBrainzException(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body), $response);
     }
 
     /**
@@ -208,19 +211,17 @@ class musicbrainz
 	First argument should be an array with track numbers as keys and ISRCs as values
 	Second argument should be the return of getrelease() with 'recordings' as second parameter
 	*/
-	function build_isrc_list($isrc_tracks,$release)
+	public static function build_isrc_list($isrc_tracks,$release)
 	{
 		$dom=new DOMDocumentCustom;
 		$dom->formatOutput=true;
 		if(!is_object($release))
 		{
-			$this->error='$release is not object';
-			return false;
+			throw new InvalidArgumentException('$release is not object');
 		}
 		if(empty($release->release->{'medium-list'}))
 		{
-			$this->error='$release does not contain mediums';
-			return false;
+            throw new InvalidArgumentException('$release does not contain mediums');
 		}
 		$metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
 		$recording_list=$dom->createElement_simple('recording-list',$metadata);
@@ -235,8 +236,7 @@ class musicbrainz
 				$isrc_list=$dom->createElement_simple('isrc-list',$recording,array('count'=>'1'));
 				if(!isset($isrc_tracks[$track_number]))
 				{
-					$this->error=sprintf('Track count mismatch, track %s not found',$track_number);
-					return false;
+					throw new Exception(sprintf('Track count mismatch, track %s not found',$track_number));
 				}
 				$isrc=$isrc_tracks[$track_number];
 				$dom->createElement_simple('isrc',$isrc_list,array('id'=>$isrc));

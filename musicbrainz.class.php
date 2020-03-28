@@ -212,7 +212,7 @@ class musicbrainz
 	 * @param array $isrc_tracks Array with track numbers as keys and ISRCs as values
 	 * @param SimpleXMLElement $release Return of getrelease() with 'recordings' as second parameter
 	 * @return string
-	 * @throws Exception
+	 * @throws MusicBrainzException
 	 */
 	public static function build_isrc_list($isrc_tracks,$release)
 	{
@@ -239,7 +239,7 @@ class musicbrainz
 				$isrc_list=$dom->createElement_simple('isrc-list',$recording,array('count'=>'1'));
 				if(!isset($isrc_tracks[$track_number]))
 				{
-					throw new Exception(sprintf('Track count mismatch, track %s not found',$track_number));
+					throw new MusicBrainzException(sprintf('Track count mismatch, track %s not found',$track_number), null);
 				}
 				$isrc=$isrc_tracks[$track_number];
 				$dom->createElement_simple('isrc',$isrc_list,array('id'=>$isrc));
@@ -253,15 +253,20 @@ class musicbrainz
     /**
      * Submit ISRCs for a release
      * @param string $xml XML string returned by build_isrc_list()
-     * @return array
+     * @return array Response from MusicBrainz
      * @throws MusicBrainzException
-     * @throws Requests_Exception
      */
 	function send_isrc_list($xml)
 	{
 		$config = require 'config.php';
-		$options = array('auth'=>new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
-        $response = $this->session->post('/ws/2/recording/?client=datagutten-musicbrainz-'.$this->version.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
+		try {
+			$options = array('auth' => new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
+			$response = $this->session->post('/ws/2/recording/?client=datagutten-musicbrainz-'.$this->version.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
+		}
+		catch (Requests_Exception $e) {
+			throw new MusicBrainzException($e->getMessage(),'', 0, $e);
+		}
+
         return $this->handle_response($response);
 	}
 }

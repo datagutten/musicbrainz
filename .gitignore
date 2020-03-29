@@ -2,3 +2,6 @@ config.php
 isrc_cache
 
 /vendor/
+
+coverage_html
+clover.xml

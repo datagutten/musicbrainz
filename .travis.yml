@@ -1,0 +1,31 @@
+language: php
+
+matrix:
+  fast_finish: true
+  include:
+    - php: '7.2'
+    - php: '7.3'
+    - php: '7.4'
+    - php: 'nightly'
+      env: IGNORE_PLATFORM_REQS=true
+  allow_failures:
+    - php: 'nightly'
+
+addons:
+ apt:
+  packages:
+   - php-xml
+
+install:
+  - if [ "$IGNORE_PLATFORM_REQS" == 'true' ]; then composer install --no-interaction --ignore-platform-reqs;
+    else composer install --no-interaction;
+    fi
+
+before_script:
+ - vendor/bin/phpunit --version
+
+script:
+ - vendor/bin/phpunit
+
+after_script:
+  - bash <(curl -s https://codecov.io/bash)

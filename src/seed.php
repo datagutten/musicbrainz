@@ -69,6 +69,6 @@ class seed
 	 */
 	static function artistNoNum($artist_name)
 	{
-		return preg_replace('/ \(\d + \)$/', '', $artist_name);
+		return preg_replace('/ \(\d+\)$/', '', $artist_name);
 	}
 }

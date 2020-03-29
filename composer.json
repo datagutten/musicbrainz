@@ -21,5 +21,8 @@
         "datagutten\\musicbrainz\\": "src"
       },
         "classmap": ["Digest.php"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
     }
 }

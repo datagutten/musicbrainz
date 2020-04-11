@@ -69,18 +69,20 @@ class AcoustId
 	/**
 	 * Lookup a file on AcoustID
 	 * @param string $file File path
+     * @param bool $single_result Return only best match
 	 * @return array
 	 * @throws FileNotFoundException
 	 * @throws exceptions\AcoustIdException
 	 */
-	function lookup_file($file)
+	function lookup_file($file, $single_result = true)
 	{
 		if(!file_exists($file))
 			throw new FileNotFoundException($file);
 		$info=$this->fingerprint($file);
 		$result=$this->lookup($info['fingerprint'],$info['duration']);
-
-		if(!empty($result['results']))
+		if(!$single_result)
+		    return $result;
+		elseif(!empty($result['results']))
 			return $result['results'][0];
 		else
 			return null;

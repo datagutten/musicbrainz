@@ -7,7 +7,7 @@ class seedTest extends TestCase
 {
     public function testArtistNoNum()
     {
-        $this->assertEquals('Paul Gordon', seed\seed::artistNoNum('Paul Gordon (7)'));
+        $this->assertEquals('Paul Gordon', seed\Utils::stripDiscogsNumber('Paul Gordon (7)'));
     }
 
     public function testTrack()

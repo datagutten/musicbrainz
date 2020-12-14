@@ -62,13 +62,4 @@ class seed
 	{
 		$this->dom->createElement_simple('p', $this->fieldset, false, $message);
 	}
-	/** Returns the name without the numerical suffix Discogs adds as disambiguation
-	 * ie. "ABC (123)" -> "ABC"
-	 * @param string $artist_name
-	 * @return string
-	 */
-	static function artistNoNum($artist_name)
-	{
-		return preg_replace('/ \(\d+\)$/', '', $artist_name);
-	}
 }

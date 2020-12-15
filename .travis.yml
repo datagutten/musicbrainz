@@ -1,31 +1,32 @@
 language: php
 
-matrix:
+jobs:
   fast_finish: true
   include:
     - php: '7.2'
     - php: '7.3'
     - php: '7.4'
+      after_script:
+        - bash <(curl -s https://codecov.io/bash)
+    - php: '7.4'
+      name: 'Prefer lowest'
+      install:
+        - composer update --no-interaction --prefer-lowest
     - php: 'nightly'
-      env: IGNORE_PLATFORM_REQS=true
+      install:
+        - composer update --no-interaction --ignore-platform-reqs
   allow_failures:
     - php: 'nightly'
 
-addons:
- apt:
-  packages:
-   - php-xml
+cache:
+  directories:
+    - $HOME/.cache/composer/files
 
 install:
-  - if [ "$IGNORE_PLATFORM_REQS" == 'true' ]; then composer install --no-interaction --ignore-platform-reqs;
-    else composer install --no-interaction;
-    fi
+  composer update --no-interaction
 
 before_script:
  - vendor/bin/phpunit --version
 
 script:
  - vendor/bin/phpunit
-
-after_script:
-  - bash <(curl -s https://codecov.io/bash)

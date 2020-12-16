@@ -26,6 +26,7 @@ class ReleaseTest extends TestCase
         $url = $release->url(['url'=>'https://tidal.com', 'link_type'=>seed\URL::stream_for_free]);
         $this->assertInstanceOf(seed\URL::class, $url);
         $this->assertSame(85, $url->link_type);
+        $this->assertArrayHasKey('urls.0.url', $release->save());
     }
 
     public function testLabel()

@@ -9,10 +9,6 @@ use RuntimeException;
 abstract class Element
 {
     /**
-     * @var array Data
-     */
-    public $data = [];
-    /**
      * @var array Field names
      */
     protected $fields = [];
@@ -47,18 +43,5 @@ abstract class Element
                 $data[$prefix.$field] = $this->$field;
         }
         return $data;
-    }
-
-    /**
-     * @param string $field Field name
-     * @param string $value Field value
-     * @param int $key
-     */
-    function field(string $field, string $value, int $key = null)
-    {
-        if (is_numeric($key))
-            $field = sprintf($field, $key);
-
-        $this->data[$field] = $value;
     }
 }

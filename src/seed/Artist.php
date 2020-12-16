@@ -16,18 +16,4 @@ class Artist extends Element
     {
         $this->register_fields($args);
     }
-
-/*    public function save(string $prefix)
-    {
-        $data = [];
-        foreach ($this->fields as $field)
-        {
-            if (empty($this->$field))
-                continue;
-
-            $key = $prefix . $field;
-            $data[$key] = $this->$field;
-        }
-        return $data;
-    }*/
 }

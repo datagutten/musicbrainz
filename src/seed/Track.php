@@ -38,14 +38,14 @@ class Track extends Element
         $this->register_fields($args);
     }
 
-    public function artist($args)
+    public function artist($args): Artist
     {
         $artist = new Artist($args);
         $this->artists[] = $artist;
         return $artist;
     }
 
-    public function save(string $prefix)
+    public function save(string $prefix): array
     {
         $data = parent::save($prefix);
         foreach ($this->artists as $key => $artist)

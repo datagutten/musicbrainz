@@ -47,35 +47,35 @@ class Release extends Element
         $this->register_fields($args);
     }
 
-    public function artist($args)
+    public function artist($args): Artist
     {
         $artist = new Artist($args);
         $this->artists[] = $artist;
         return $artist;
     }
 
-    public function event(DateTime $dateTime)
+    public function event(DateTime $dateTime): Event
     {
         $event = new Event($dateTime);
         $this->events[] = $event;
         return $event;
     }
 
-    public function label($args)
+    public function label($args): Label
     {
         $label = new Label($args);
         $this->labels[] = $label;
         return $label;
     }
 
-    public function url($args)
+    public function url($args): URL
     {
         $url = new URL($args);
         $this->urls[] = $url;
         return $url;
     }
 
-    public function medium($args)
+    public function medium($args): Medium
     {
         $medium = new Medium($args);
         $this->mediums[] = $medium;
@@ -93,7 +93,7 @@ class Release extends Element
                 return $this->track_list;
         }*/
 
-    public function save(string $prefix = '')
+    public function save(string $prefix = ''): array
     {
         $output = parent::save($prefix);
 

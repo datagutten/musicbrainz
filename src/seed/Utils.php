@@ -12,7 +12,7 @@ class Utils
      * @param string $artist_name
      * @return string
      */
-    public static function stripDiscogsNumber(string $artist_name)
+    public static function stripDiscogsNumber(string $artist_name): string
     {
         return preg_replace('/ \(\d+\)$/', '', $artist_name);
     }

@@ -40,7 +40,7 @@ class musicbrainz
      * @return Requests_Response
      * @throws exceptions\MusicBrainzErrorException HTTP response code not 200
      */
-    function get($url)
+    function get(string $url): Requests_Response
     {
         if($this->last_request_time!==false) //Do not sleep on first execution
         {
@@ -62,7 +62,7 @@ class musicbrainz
      * @return array|SimpleXMLElement Returns array if $json=true
      * @throws exceptions\MusicBrainzErrorException
      */
-    function api_request($uri, $json=false)
+    function api_request(string $uri, $json=false)
     {
         $url='https://musicbrainz.org/ws/2'.$uri;
         if($json)
@@ -76,7 +76,7 @@ class musicbrainz
      * @return array|SimpleXMLElement
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
      */
-	public static function handle_response($response)
+	public static function handle_response(Requests_Response $response)
     {
         if($response->body[0]=='{')
         {
@@ -106,7 +106,7 @@ class musicbrainz
      * @return SimpleXMLElement
      * @throws exceptions\MusicBrainzErrorException
      */
-	function lookup_isrc($isrc,$inc='releases')
+	function lookup_isrc(string $isrc, $inc='releases')
 	{
 		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc));
 	}
@@ -164,8 +164,8 @@ class musicbrainz
      * @return string File name
      * @throws exceptions\MusicBrainzException File not found
      */
-	public static function firstfile($dir)
-	{
+	public static function firstfile(string $dir): string
+    {
 		$file=glob(sprintf('/%s/01*.flac',$dir));
 		if(!empty($file))
 			return $file[0];
@@ -180,8 +180,8 @@ class musicbrainz
      * @param SimpleXMLElement $xml
      * @return array
      */
-	function tags($xml)
-	{
+	function tags(SimpleXMLElement $xml): array
+    {
 		if(empty($xml->{'release'}->{'artist-credit'}->{'name-credit'}->artist->{'tag-list'}))
 			return array();
 		foreach($xml->{'release'}->{'artist-credit'}->{'name-credit'}->artist->{'tag-list'}->tag as $tag)
@@ -201,7 +201,7 @@ class musicbrainz
      * @param array $array Array with id as key and ISRC as value
      * @return string
      */
-    function build_isrc_list_array($array)
+    function build_isrc_list_array(array $array): string
     {
         $dom=new DOMDocumentCustom;
         $dom->formatOutput=true;
@@ -218,15 +218,15 @@ class musicbrainz
         return $dom->saveXML($metadata);
     }
 
-	/**
-	 * Build XML for ISRC submission
-	 * @param array $isrc_tracks Array with track numbers as keys and ISRCs as values
-	 * @param SimpleXMLElement $release Return of getrelease() with 'recordings' as second parameter
-	 * @return string
-	 * @throws exceptions\MusicBrainzException
-	 */
-	public static function build_isrc_list($isrc_tracks,$release)
-	{
+    /**
+     * Build XML for ISRC submission
+     * @param array $isrc_tracks Array with track numbers as keys and ISRCs as values
+     * @param SimpleXMLElement $release Return of getrelease() with 'recordings' as second parameter
+     * @return string
+     * @throws exceptions\MusicBrainzException
+     */
+	public static function build_isrc_list(array $isrc_tracks, SimpleXMLElement $release): string
+    {
 		$dom=new DOMDocumentCustom;
 		$dom->formatOutput=true;
 		if(!is_object($release))
@@ -267,7 +267,7 @@ class musicbrainz
      * @return array Response from MusicBrainz
      * @throws exceptions\MusicBrainzException
      */
-	function send_isrc_list($xml)
+	function send_isrc_list(string $xml)
 	{
 		$config = require 'config.php';
 		try {

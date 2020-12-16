@@ -15,9 +15,9 @@ abstract class Element
 
     /**
      * Register valid arguments as properties
-     * @param $args
+     * @param array $args
      */
-    public function register_fields($args)
+    public function register_fields(array $args)
     {
         if(empty($this->fields))
             throw new RuntimeException('No fields found');
@@ -34,7 +34,7 @@ abstract class Element
      * @param string $prefix Field name prefix
      * @return array
      */
-    public function save(string $prefix)
+    public function save(string $prefix): array
     {
         $data = [];
         foreach ($this->fields as $field)

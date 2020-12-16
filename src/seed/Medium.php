@@ -26,14 +26,14 @@ class Medium extends Element
      * @param $args
      * @return Track
      */
-    public function track($args)
+    public function track($args): Track
     {
         $track = new Track($args);
         $this->tracks[] = $track;
         return $track;
     }
 
-    public function save(string $prefix)
+    public function save(string $prefix): array
     {
         $data = parent::save($prefix);
         foreach($this->tracks as $key=>$track)

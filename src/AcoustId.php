@@ -23,15 +23,15 @@ class AcoustId
 		curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 5);
 	}
 
-	/**
-	 * Lookup a fingerprint
-	 * @param string $fingerprint Fingerprint
-	 * @param int $duration Duration
-	 * @return array
-	 * @throws exceptions\AcoustIdException AcoustId returned error
-	 */
-	function lookup($fingerprint,$duration)
-	{
+    /**
+     * Lookup a fingerprint
+     * @param string $fingerprint Fingerprint
+     * @param int $duration Duration
+     * @return array
+     * @throws exceptions\AcoustIdException AcoustId returned error
+     */
+	function lookup(string $fingerprint, int $duration): array
+    {
 		$url=sprintf('http://api.acoustid.org/v2/lookup?format=json&client=%s&duration=%d&fingerprint=%s&meta=recordingids',$this->api_key,$duration,$fingerprint);
 		//var_dump($url);
 		curl_setopt($this->ch,CURLOPT_URL,$url);
@@ -59,23 +59,23 @@ class AcoustId
 	 * @param $file
 	 * @return array
 	 */
-	function fingerprint($file)
-	{
+	function fingerprint($file): array
+    {
 		$info=shell_exec(sprintf('fpcalc -json "%s"',$file));
 		$info=json_decode($info,true);
 		return $info;
 	}
 
-	/**
-	 * Lookup a file on AcoustID
-	 * @param string $file File path
+    /**
+     * Lookup a file on AcoustID
+     * @param string $file File path
      * @param bool $single_result Return only best match
-	 * @return array
-	 * @throws FileNotFoundException
-	 * @throws exceptions\AcoustIdException
-	 */
-	function lookup_file($file, $single_result = true)
-	{
+     * @return array
+     * @throws FileNotFoundException
+     * @throws exceptions\AcoustIdException
+     */
+	function lookup_file(string $file, $single_result = true): array
+    {
 		if(!file_exists($file))
 			throw new FileNotFoundException($file);
 		$info=$this->fingerprint($file);

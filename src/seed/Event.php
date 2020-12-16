@@ -18,7 +18,7 @@ class Event extends Element
         $this->dateTime = $dateTime;
     }
 
-    function save(string $prefix)
+    function save(string $prefix): array
     {
         return [
             $prefix.'date.year' => $this->dateTime->format('Y'),

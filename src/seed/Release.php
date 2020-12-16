@@ -40,7 +40,7 @@ class Release extends Element
     /**
      * @var Medium[]
      */
-    public $mediums;
+    public $mediums = [];
 
     function __construct($args = [])
     {

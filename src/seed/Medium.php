@@ -13,7 +13,7 @@ class Medium extends Element
     /**
      * @var Track[]
      */
-    public $tracks;
+    public $tracks = [];
 
     public function __construct($args)
     {

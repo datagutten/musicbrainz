@@ -8,7 +8,7 @@ use DateTime;
 
 class Release extends Element
 {
-    protected $fields = ['name', 'type', 'status', 'script', 'packaging'];
+    protected $fields = ['name', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url'];
     public $data = [];
 
     public $name;
@@ -41,6 +41,14 @@ class Release extends Element
      * @var Medium[]
      */
     public $mediums = [];
+    /**
+     * @var string Edit note
+     */
+    public $edit_note;
+    /**
+     * @var string Redirect URL
+     */
+    public $redirect_uri;
 
     function __construct($args = [])
     {

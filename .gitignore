@@ -1,8 +1,8 @@
 config.php
-isrc_cache
 
 /vendor/
 composer.lock
 
 coverage_html
 clover.xml
+cache

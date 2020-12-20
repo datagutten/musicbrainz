@@ -4,6 +4,7 @@
 namespace datagutten\musicbrainz;
 
 
+use datagutten\tools\files\files;
 use DOMDocumentCustom;
 use InvalidArgumentException;
 use Requests_Auth_Digest;
@@ -23,6 +24,10 @@ class musicbrainz
      */
 	public $session;
 	public $version = '2.0';
+    /**
+     * @var string Folder for ISRC cache files
+     */
+	public $isrc_cache_folder;
 	function __construct()
 	{
 		$this->ch=curl_init();
@@ -32,6 +37,9 @@ class musicbrainz
             'https://musicbrainz.org/ws/2',
             array(),
             array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
+        $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
+        if(!file_exists($this->isrc_cache_folder))
+            mkdir($this->isrc_cache_folder, 0777, true);
 	}
 
     /**
@@ -103,32 +111,30 @@ class musicbrainz
      * Find recording by ISRC
      * @param string $isrc ISRC to find
      * @param string $inc
-     * @return SimpleXMLElement
+     * @return array
      * @throws exceptions\MusicBrainzErrorException
      */
 	function lookup_isrc(string $isrc, $inc='releases')
 	{
-		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc));
+		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc), true);
 	}
 
     /**
      * Find recording by ISRC and cache the result
      * @param string $isrc ISRC to find
-     * @return SimpleXMLElement
+     * @return array
      * @throws exceptions\MusicBrainzErrorException
-	 */
-	function lookup_isrc_cache($isrc)
+     */
+	function lookup_isrc_cache(string $isrc)
 	{
-		$cache_dir=__DIR__.'/isrc_cache';
-		if(file_exists($cache_file=$cache_dir.'/'.$isrc.'.xml'))
-			return simplexml_load_file($cache_file);
+		$cache_file = files::path_join($this->isrc_cache_folder, $isrc.'.json');
+		if(file_exists($cache_file))
+			return json_decode(file_get_contents($cache_file), true);
 		else
 		{
-			$xml=$this->lookup_isrc($isrc);
-			if(!file_exists($cache_dir))
-				mkdir($cache_dir);
-			$xml->asXML($cache_file);
-			return $xml;
+			$data=$this->lookup_isrc($isrc);
+			file_put_contents($cache_file, json_encode($data));
+			return $data;
 		}
 	}
 

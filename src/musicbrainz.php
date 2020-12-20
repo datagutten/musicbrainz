@@ -4,6 +4,7 @@
 namespace datagutten\musicbrainz;
 
 
+use Composer\InstalledVersions;
 use datagutten\tools\files\files;
 use DOMDocumentCustom;
 use InvalidArgumentException;
@@ -15,7 +16,6 @@ use SimpleXMLElement;
 
 class musicbrainz
 {
-	public $ch;
 	public $error;
 	public $last_request_time;
 	public $depend;
@@ -23,20 +23,17 @@ class musicbrainz
      * @var Requests_Session
      */
 	public $session;
-	public $version = '2.0';
     /**
      * @var string Folder for ISRC cache files
      */
 	public $isrc_cache_folder;
 	function __construct()
 	{
-		$this->ch=curl_init();
-		curl_setopt($this->ch,CURLOPT_RETURNTRANSFER,true);
-		curl_setopt($this->ch,CURLOPT_USERAGENT,'MusicBrainz PHP class/0.0.1 ( https://github.com/datagutten/musicbrainz )');
+		$version = InstalledVersions::getVersion('datagutten/musicbrainz');
         $this->session = new Requests_Session(
             'https://musicbrainz.org/ws/2',
             array(),
-            array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
+            array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $version)));
         $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
         if(!file_exists($this->isrc_cache_folder))
             mkdir($this->isrc_cache_folder, 0777, true);

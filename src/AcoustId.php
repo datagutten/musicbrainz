@@ -59,7 +59,7 @@ class AcoustId
 	 * @param $file
 	 * @return array
 	 */
-	function fingerprint($file): array
+	public static function fingerprint($file): array
     {
 		$info=shell_exec(sprintf('fpcalc -json "%s"',$file));
 		$info=json_decode($info,true);
@@ -78,7 +78,7 @@ class AcoustId
     {
 		if(!file_exists($file))
 			throw new FileNotFoundException($file);
-		$info=$this->fingerprint($file);
+		$info=self::fingerprint($file);
 		$result=$this->lookup($info['fingerprint'],$info['duration']);
 		if(!$single_result)
 		    return $result;

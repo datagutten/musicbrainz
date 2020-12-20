@@ -55,4 +55,16 @@ class ReleaseTest extends TestCase
         $this->assertArrayHasKey('events.0.date.year', $release->save());
         $this->assertSame('2020', $release->save()['events.0.date.year']);
     }
+
+    public function testEventCountry()
+    {
+        $release = new Release([]);
+        $event = $release->event(new DateTime('2020-01-01'), 'NO');
+        $this->assertInstanceOf(seed\Event::class, $event);
+        $this->assertArrayHasKey('events.0.date.year', $release->save());
+        $this->assertSame('2020', $release->save()['events.0.date.year']);
+        $this->assertSame('NO', $event->country);
+        $event_array = $event->save('');
+        $this->assertSame('NO', $event_array['country']);
+    }
 }

@@ -62,9 +62,9 @@ class Release extends Element
         return $artist;
     }
 
-    public function event(DateTime $dateTime): Event
+    public function event(DateTime $dateTime, $country=''): Event
     {
-        $event = new Event($dateTime);
+        $event = new Event($dateTime, $country);
         $this->events[] = $event;
         return $event;
     }

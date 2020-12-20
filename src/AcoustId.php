@@ -85,6 +85,6 @@ class AcoustId
 		elseif(!empty($result['results']))
 			return $result['results'][0];
 		else
-			return null;
+			return [];
 	}
 }

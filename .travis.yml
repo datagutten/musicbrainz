@@ -8,6 +8,7 @@ jobs:
     - php: '7.4'
       after_script:
         - bash <(curl -s https://codecov.io/bash)
+    - php: '8.0'
     - php: '7.4'
       name: 'Prefer lowest'
       install:

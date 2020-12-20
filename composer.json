@@ -7,7 +7,7 @@
         "ext-json": "*",
         "ext-curl": "*",
         "ext-simplexml": "*",
-        "datagutten/tools": "^1.1",
+        "datagutten/tools": "^1.8",
         "rmccue/requests": "^1.7"
     },
     "license": "GPL-3.0-or-later",

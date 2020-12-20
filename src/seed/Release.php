@@ -8,7 +8,7 @@ use DateTime;
 
 class Release extends Element
 {
-    protected $fields = ['name', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url'];
+    protected $fields = ['name', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
     public $data = [];
 
     public $name;
@@ -17,6 +17,7 @@ class Release extends Element
     public $script;
     public $packaging;
     public $action = 'https://musicbrainz.org/release/add';
+    public $barcode;
 
     /**
      * @var Event[]

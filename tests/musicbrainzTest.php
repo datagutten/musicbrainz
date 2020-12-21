@@ -1,6 +1,7 @@
 <?php
 
 
+use datagutten\musicbrainz\exceptions\MusicBrainzErrorException;
 use datagutten\musicbrainz\musicbrainz;
 use datagutten\tools\files\files;
 use PHPUnit\Framework\TestCase;
@@ -16,6 +17,10 @@ class musicbrainzTest extends TestCase
         $this->assertSame('Det snør, det snør, tiddelibom', $data['recordings'][0]['title']);
     }
 
+    /**
+     * @throws MusicBrainzErrorException
+     * @requires PHPUnit >=9.5
+     */
     public function testLookup_isrc_cache()
     {
         $mb = new datagutten\musicbrainz\musicbrainz();

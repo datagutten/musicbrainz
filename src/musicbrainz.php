@@ -43,9 +43,8 @@ class musicbrainz
      * Do a HTTP GET to MusicBrainz
      * @param string $url URL
      * @return Requests_Response
-     * @throws exceptions\MusicBrainzErrorException HTTP response code not 200
      */
-    function get(string $url): Requests_Response
+    protected function get(string $url): Requests_Response
     {
         if($this->last_request_time!==false) //Do not sleep on first execution
         {
@@ -55,10 +54,7 @@ class musicbrainz
         }
         $response = $this->session->get($url);
         $this->last_request_time=microtime(true);
-		if($response->status_code===200)
-			return $response;
-		else
-			throw new exceptions\MusicBrainzErrorException(sprintf('MusicBrainz returned code %d, body %s', $response->status_code, $response->body), $response);
+		return $response;
     }
 
     /**
@@ -67,12 +63,12 @@ class musicbrainz
      * @return array|SimpleXMLElement Returns array if $json=true
      * @throws exceptions\MusicBrainzErrorException
      */
-    function api_request(string $uri, $json=false)
+    public function api_request(string $uri, $json=false)
     {
         $url='https://musicbrainz.org/ws/2'.$uri;
         if($json)
             $url.='&fmt=json';
-        return $this->handle_response($this->get($url));
+        return self::handle_response($this->get($url));
 	}
 
     /**

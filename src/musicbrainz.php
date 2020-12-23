@@ -27,13 +27,18 @@ class musicbrainz
      * @var string Folder for ISRC cache files
      */
 	public $isrc_cache_folder;
-	function __construct()
+    /**
+     * @var string
+     */
+    public $version;
+
+    function __construct()
 	{
-		$version = InstalledVersions::getVersion('datagutten/musicbrainz');
+		$this->version = InstalledVersions::getVersion('datagutten/musicbrainz');
         $this->session = new Requests_Session(
             'https://musicbrainz.org/ws/2',
             array(),
-            array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $version)));
+            array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
         $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
         if(!file_exists($this->isrc_cache_folder))
             mkdir($this->isrc_cache_folder, 0777, true);
@@ -263,15 +268,20 @@ class musicbrainz
     /**
      * Submit ISRCs for a release
      * @param string $xml XML string returned by build_isrc_list()
+     * @param string $client Client string
      * @return array Response from MusicBrainz
      * @throws exceptions\MusicBrainzException
      */
-	function send_isrc_list(string $xml)
+	function send_isrc_list(string $xml, $client='')
 	{
+	    if(empty($client))
+            $client = 'datagutten-musicbrainz-'.$this->version;
+	    $client = urlencode($client);
+
 		$config = require 'config.php';
 		try {
 			$options = array('auth' => new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
-			$response = $this->session->post('/ws/2/recording/?client=datagutten-musicbrainz-'.$this->version.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
+			$response = $this->session->post('/ws/2/recording/?client='.$client.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
 		}
 		catch (Requests_Exception $e) {
 			throw new exceptions\MusicBrainzException($e->getMessage(), 0, $e);

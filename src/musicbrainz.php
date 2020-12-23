@@ -32,14 +32,18 @@ class musicbrainz
      */
     public $version;
 
-    function __construct()
+    function __construct($config=['isrc_cache_folder'=>''])
 	{
 		$this->version = InstalledVersions::getVersion('datagutten/musicbrainz');
         $this->session = new Requests_Session(
             'https://musicbrainz.org/ws/2',
             array(),
             array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
-        $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
+        if(!empty($config['isrc_cache_folder']))
+            $this->isrc_cache_folder = $config['isrc_cache_folder'];
+        else
+            $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
+
         if(!file_exists($this->isrc_cache_folder))
             mkdir($this->isrc_cache_folder, 0777, true);
 	}

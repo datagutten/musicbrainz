@@ -205,7 +205,7 @@ class musicbrainz
      * @param array $array Array with id as key and ISRC as value
      * @return string
      */
-    function build_isrc_list_array(array $array): string
+    public static function build_isrc_list_array(array $array): string
     {
         $dom=new DOMDocumentCustom;
         $dom->formatOutput=true;

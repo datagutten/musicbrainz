@@ -59,13 +59,13 @@ class Requests_Auth_Digest implements Requests_Auth {
 	 * @see fsockopen_header
 	 * @param Requests_Hooks $hooks Hook system
 	 */
-	public function register(Requests_Hooks &$hooks) {
+	public function register(Requests_Hooks $hooks) {
 		$hooks->register('curl.before_send', array(&$this, 'curl_before_send'));
 		$hooks->register('fsockopen.after_request', array(&$this, 'fsockopen_request'));
 		$hooks->register('requests.before_request', array(&$this, 'save_request'));
 	}
 
-	function save_request(&$url, &$headers, &$data, &$type, &$options)
+	function save_request($url, $headers, $data, $type, $options)
     {
         $this->request = array('url'=>$url, 'headers'=>$headers, 'data'=>$data, 'type'=>$type, 'options'=>$options);
     }
@@ -75,7 +75,7 @@ class Requests_Auth_Digest implements Requests_Auth {
 	 *
 	 * @param resource $handle cURL resource
 	 */
-	public function curl_before_send(&$handle) {
+	public function curl_before_send($handle) {
 		curl_setopt($handle, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
 		curl_setopt($handle, CURLOPT_USERPWD, $this->getAuthString());
 	}

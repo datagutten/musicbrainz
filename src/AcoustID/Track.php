@@ -5,8 +5,9 @@ namespace datagutten\musicbrainz\AcoustID;
 
 
 use datagutten\musicbrainz\objects\Recording;
+use datagutten\musicbrainz\SimpleArrayAccess;
 
-class Track
+class Track extends SimpleArrayAccess
 {
     public float $duration;
     public string $fingerprint;

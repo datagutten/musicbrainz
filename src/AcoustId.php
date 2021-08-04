@@ -6,6 +6,9 @@ namespace datagutten\musicbrainz;
 
 use FileNotFoundException;
 
+/**
+ * @deprecated
+ */
 class AcoustId
 {
 	/**

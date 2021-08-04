@@ -11,6 +11,9 @@ class Release extends Element
     protected $fields = ['name', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
     public $data = [];
 
+    /**
+     * @var string Release name
+     */
     public $name;
     public $type;
     public $status;
@@ -20,36 +23,36 @@ class Release extends Element
     public $barcode;
 
     /**
-     * @var Event[]
+     * @var Event[] Release events
      */
-    public $events = [];
+    public array $events = [];
 
     /**
-     * @var Artist[]
+     * @var Artist[] Release artists
      */
-    public $artists = [];
+    public array $artists = [];
 
     /**
-     * @var Label[];
+     * @var Label[] Release label
      */
-    public $labels = [];
+    public array $labels = [];
     /**
-     * @var URL[]
+     * @var URL[] Release URL
      */
-    public $urls = [];
+    public array $urls = [];
 
     /**
-     * @var Medium[]
+     * @var Medium[] Release mediums containing tracks
      */
-    public $mediums = [];
+    public array $mediums = [];
     /**
      * @var string Edit note
      */
-    public $edit_note;
+    public string $edit_note;
     /**
      * @var string Redirect URL
      */
-    public $redirect_uri;
+    public string $redirect_uri;
 
     function __construct($args = [])
     {

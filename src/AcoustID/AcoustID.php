@@ -5,6 +5,7 @@ namespace datagutten\musicbrainz\AcoustID;
 
 
 use datagutten\musicbrainz\exceptions\AcoustIdException;
+use datagutten\musicbrainz\exceptions\NotFound;
 use FileNotFoundException;
 use Requests_Exception;
 use Requests_Response;
@@ -45,11 +46,10 @@ class AcoustID
      */
     protected static function handleResponse(Requests_Response $response): array
     {
-        if(!$response->success)
-            throw new AcoustIdException('HTTP error: '.$response->status_code);
-
         $data = json_decode($response->body, true);
-        if ($data['status'] !== 'ok')
+        if (empty($data))
+            throw new AcoustIdException('HTTP error: ' . $response->status_code);
+        elseif ($data['status'] !== 'ok')
             throw new AcoustIdException($data['error']['message']);
         else
             return $data;
@@ -93,7 +93,8 @@ class AcoustID
      * @param Fingerprint $fingerprint
      * @param string[] $meta Metadata to include in response (recordings, recordingids, releases, releaseids, releasegroups, releasegroupids, tracks, compress, usermeta, sources)
      * @return Track
-     * @throws AcoustIdException
+     * @throws AcoustIdException Something went wrong
+     * @throws NotFound Fingerprint was not found on AcoustID
      */
     public function lookup(Fingerprint $fingerprint, array $meta = ['recordings']): Track
     {
@@ -101,6 +102,8 @@ class AcoustID
             'meta' => implode('+', $meta)];
 
         $response = $this->get('lookup', $query);
+        if (empty($response['results']))
+            throw new NotFound('Fingerprint was not found on AcoustID');
         $track = new Track($response['results'][0]);
         $track->fingerprint = $fingerprint;
         return $track;

@@ -115,7 +115,8 @@ class AcoustID
      * @param bool $single_result Return only best match
      * @return Track Track object
      * @throws FileNotFoundException
-     * @throws AcoustIdException
+     * @throws AcoustIdException Something went wrong
+     * @throws NotFound Fingerprint was not found on AcoustID
      */
     function lookup_file(string $file, bool $single_result = true): Track
     {

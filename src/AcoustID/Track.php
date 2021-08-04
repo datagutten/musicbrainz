@@ -9,10 +9,25 @@ use datagutten\musicbrainz\SimpleArrayAccess;
 
 class Track extends SimpleArrayAccess
 {
+    /**
+     * @var float Track duration in seconds with decimals
+     */
     public float $duration;
+    /**
+     * @var Fingerprint Fingerprint
+     */
     public Fingerprint $fingerprint;
+    /**
+     * @var int Bitrate
+     */
     public int $bitrate;
+    /**
+     * @var string Track ID
+     */
     public string $id;
+    /**
+     * @var Recording[] Recordings
+     */
     public array $recordings = [];
 
     public function __construct($data)
@@ -26,5 +41,4 @@ class Track extends SimpleArrayAccess
             }
         }
     }
-
 }

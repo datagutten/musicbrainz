@@ -4,9 +4,10 @@
 namespace datagutten\musicbrainz\seed;
 
 
+use datagutten\musicbrainz\SimpleArrayAccess;
 use RuntimeException;
 
-abstract class Element
+abstract class Element extends SimpleArrayAccess
 {
     /**
      * @var array Field names

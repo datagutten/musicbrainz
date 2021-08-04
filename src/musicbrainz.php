@@ -45,7 +45,11 @@ class musicbrainz
             $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
 
         if(!file_exists($this->isrc_cache_folder))
-            mkdir($this->isrc_cache_folder, 0777, true);
+        {
+            $status = mkdir($this->isrc_cache_folder, 0777, true);
+            if($status===false)
+                printf('Unable to create ISRC cache folder at %s', $this->isrc_cache_folder);
+        }
 	}
 
     /**

@@ -30,6 +30,7 @@ class Recording extends Element
         {
             $this->artists[] = new Artist(['mbid' => $artist['id'], 'name' => $artist['name']]);
         }
+        $this->title = $data['title'];
     }
 
     public static function fromAcoustId($data): static

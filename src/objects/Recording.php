@@ -15,8 +15,13 @@ class Recording extends Element
      * @var Artist[] Recording Artists
      */
     public array $artists = [];
+    /**
+     * @var string Recording title
+     */
+    public string $title;
+
     public static array $required_fields = ['id', 'artists'];
-    public $fields = ['mbid', 'artists', 'length'];
+    public $fields = ['mbid', 'artists', 'length', 'title'];
 
     public function __construct($data)
     {
@@ -31,7 +36,7 @@ class Recording extends Element
     {
         return new static([
             'mbid' => $data['id'],
-            'name' => $data['title'],
+            'title' => $data['title'],
             'artists' => $data['artists'],
             'duration' => $data['duration'],
         ]);

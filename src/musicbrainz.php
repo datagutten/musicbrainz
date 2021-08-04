@@ -5,6 +5,7 @@ namespace datagutten\musicbrainz;
 
 
 use Composer\InstalledVersions;
+use datagutten\musicbrainz\objects\Recording;
 use datagutten\tools\files\files;
 use DOMDocumentCustom;
 use InvalidArgumentException;
@@ -110,7 +111,7 @@ class musicbrainz
         {
             $data = simplexml_load_string($response->body);
 
-            if(!empty($data->{'text'}))
+            if (!empty($data->{'text'}))
                 throw new exceptions\MusicBrainzErrorException($data->{'text'}[0], $response);
             else
                 return $data;
@@ -120,14 +121,27 @@ class musicbrainz
     }
 
     /**
+     * Get recording from MBID
+     * @param string $mbid Recording MBID
+     * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)
+     * @return Recording Recording object
+     * @throws exceptions\MusicBrainzErrorException
+     */
+    public function recordingFromMBID(string $mbid, array $inc = ['artists']): Recording
+    {
+        $data = $this->api_request(sprintf('/recording/%s?inc=%s', $mbid, implode('+', $inc)), true);
+        return new Recording($data);
+    }
+
+    /**
      * Find recording by ISRC
      * @param string $isrc ISRC to find
      * @param string $inc
      * @return array
      * @throws exceptions\MusicBrainzErrorException
      */
-	function lookup_isrc(string $isrc, $inc='releases')
-	{
+    function lookup_isrc(string $isrc, $inc = 'releases')
+    {
 		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc), true);
 	}
 
@@ -294,14 +308,44 @@ class musicbrainz
 	    $client = urlencode($client);
 
 		$config = require 'config.php';
-		try {
-			$options = array('auth' => new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
-			$response = $this->session->post('/ws/2/recording/?client='.$client.'&fmt=json', array('Content-Type'=>'text/xml'), $xml, $options);
-		}
-		catch (Requests_Exception $e) {
-			throw new exceptions\MusicBrainzException($e->getMessage(), 0, $e);
-		}
+        try
+        {
+            $options = array('auth' => new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
+            $response = $this->session->post('/ws/2/recording/?client=' . $client . '&fmt=json', array('Content-Type' => 'text/xml'), $xml, $options);
+        }
+        catch (Requests_Exception $e)
+        {
+            throw new exceptions\MusicBrainzException($e->getMessage(), 0, $e);
+        }
 
         return $this->handle_response($response);
-	}
+    }
+
+    /**
+     * Get release by barcode
+     * @param string $barcode Release barcode
+     * @return string Release MBID
+     * @throws exceptions\MusicBrainzErrorException
+     * @throws exceptions\MusicBrainzException
+     */
+    function release_by_barcode(string $barcode): string
+    {
+        $result = $this->api_request('/release?query=' . $barcode, true);
+        if ($result['count'] == 1)
+        {
+            $release = $result['releases'][0];
+            if ($release['barcode'] == $barcode || $release['barcode'] == '0' . $barcode)
+                return $release['id'];
+        }
+        else
+        {
+            foreach ($result['releases'] as $release)
+            {
+                if ($release['barcode'] == $barcode)
+                    return $release['id'];
+            }
+        }
+
+        throw new exceptions\MusicBrainzException('No release found with barcode ' . $barcode);
+    }
 }

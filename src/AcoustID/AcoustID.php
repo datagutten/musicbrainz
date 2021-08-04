@@ -43,8 +43,11 @@ class AcoustID
      * @return mixed
      * @throws AcoustIdException
      */
-    protected static function handleResponse(Requests_Response $response)
+    protected static function handleResponse(Requests_Response $response): array
     {
+        if(!$response->success)
+            throw new AcoustIdException('HTTP error: '.$response->status_code);
+
         $data = json_decode($response->body, true);
         if ($data['status'] !== 'ok')
             throw new AcoustIdException($data['error']['message']);

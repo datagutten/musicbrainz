@@ -89,9 +89,15 @@ class musicbrainz
      * @param Requests_Response $response
      * @return array|SimpleXMLElement
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
+     * @throws exceptions\NotFound
      */
 	public static function handle_response(Requests_Response $response)
     {
+        if($response->status_code===404)
+        {
+            //TODO: Convert/format error message?
+            throw new exceptions\NotFound($response->body);
+        }
         if($response->body[0]=='{')
         {
             $data = json_decode($response->body, true);
@@ -278,6 +284,7 @@ class musicbrainz
      * @param string $xml XML string returned by build_isrc_list()
      * @param string $client Client string
      * @return array Response from MusicBrainz
+     * @throws exceptions\MusicBrainzErrorException
      * @throws exceptions\MusicBrainzException
      */
 	function send_isrc_list(string $xml, $client='')

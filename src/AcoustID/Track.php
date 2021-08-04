@@ -10,7 +10,7 @@ use datagutten\musicbrainz\SimpleArrayAccess;
 class Track extends SimpleArrayAccess
 {
     public float $duration;
-    public string $fingerprint;
+    public Fingerprint $fingerprint;
     public int $bitrate;
     public string $id;
     public array $recordings = [];

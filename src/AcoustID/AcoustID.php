@@ -101,7 +101,9 @@ class AcoustID
             'meta' => implode('+', $meta)];
 
         $response = $this->get('lookup', $query);
-        return new Track($response['results'][0]);
+        $track = new Track($response['results'][0]);
+        $track->fingerprint = $fingerprint;
+        return $track;
     }
 
     /**

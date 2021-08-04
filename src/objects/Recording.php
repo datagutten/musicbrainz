@@ -25,10 +25,24 @@ class Recording extends Element
 
     public function __construct($data)
     {
-        $this->mbid = $data['mbid'];
-        foreach ($data['artists'] as $artist)
+        $this->mbid = $data['mbid'] ?? $data['id'];
+        if (isset($data['artists']))
         {
-            $this->artists[] = new Artist(['mbid' => $artist['id'], 'name' => $artist['name']]);
+            foreach ($data['artists'] as $artist)
+            {
+                $this->artists[] = new Artist(['mbid' => $artist['id'], 'name' => $artist['name']]);
+            }
+        }
+        elseif (isset($data['artist-credit']))
+        {
+            foreach ($data['artist-credit'] as $credit)
+            {
+                $this->artists[] = new Artist(
+                    ['mbid' => $credit['artist']['id'],
+                        'artist_name' => $credit['artist']['name'],
+                        'join_phrase' => $credit['joinphrase']
+                    ]);
+            }
         }
         $this->title = $data['title'];
     }

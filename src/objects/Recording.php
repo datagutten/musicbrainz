@@ -39,7 +39,7 @@ class Recording extends Element
             'mbid' => $data['id'],
             'title' => $data['title'],
             'artists' => $data['artists'],
-            'duration' => $data['duration'],
+            'duration' => $data['duration'] ?? null,
         ]);
     }
 }

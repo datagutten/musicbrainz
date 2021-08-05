@@ -61,36 +61,31 @@ class Release extends Element
     function __construct($args = [])
     {
         $this->register_fields($args);
-        if (!empty($args['artist-credit']))
+
+        foreach ($args['artist-credit'] ?? [] as $artist)
         {
-            foreach ($args['artist-credit'] as $artist)
-            {
-                $artist = [
-                    'artist_name' => $artist['artist']['name'],
-                    'id' => $artist['artist']['id'],
-                    'type' => $artist['artist']['type'],
-                    'name' => $artist['name'],
-                    'disambiguation' => $artist['artist']['disambiguation'],
-                    'sort_name' => $artist['artist']['sort-name'],
-                    'join_phrase' => $artist['joinphrase'],
-                ];
-                $this->artist($artist);
-            }
+            $artist = [
+                'artist_name' => $artist['artist']['name'],
+                'id' => $artist['artist']['id'],
+                'type' => $artist['artist']['type'],
+                'name' => $artist['name'],
+                'disambiguation' => $artist['artist']['disambiguation'],
+                'sort_name' => $artist['artist']['sort-name'],
+                'join_phrase' => $artist['joinphrase'],
+            ];
+            $this->artist($artist);
         }
 
-        foreach ($args['release-events'] as $event)
+        foreach ($args['release-events'] ?? [] as $event)
         {
             $date = DateTime::createFromFormat('Y-m-d', $event['date']);
             if ($date !== false)
                 $this->event($date);
         }
 
-        if (!empty($args['media']))
+        foreach ($args['media'] ?? [] as $medium)
         {
-            foreach ($args['media'] as $medium)
-            {
-                $this->medium($medium);
-            }
+            $this->medium($medium);
         }
     }
 

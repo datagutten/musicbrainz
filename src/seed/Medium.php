@@ -29,7 +29,7 @@ class Medium extends Element
         if (!empty($args['position']))
             $this->position = $args['position'];
         $this->register_fields($args);
-        foreach ($args['tracks'] as $track)
+        foreach ($args['tracks'] ?? [] as $track)
         {
             $this->track($track);
         }

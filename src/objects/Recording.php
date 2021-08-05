@@ -47,7 +47,7 @@ class Recording extends Element
         $this->title = $data['title'];
     }
 
-    public static function fromAcoustId($data): static
+    public static function fromAcoustId($data): Recording
     {
         return new static([
             'mbid' => $data['id'],

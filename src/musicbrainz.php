@@ -8,6 +8,7 @@ use Composer\InstalledVersions;
 use datagutten\musicbrainz\exceptions\NotFound;
 use datagutten\musicbrainz\objects\Recording;
 use datagutten\musicbrainz\seed\Artist;
+use datagutten\musicbrainz\seed\Release;
 use datagutten\tools\files\files;
 use DOMDocumentCustom;
 use InvalidArgumentException;
@@ -183,6 +184,20 @@ class musicbrainz
     {
         $data = $this->lookup('artist', $mbid, $inc);
         return new Artist($data);
+    }
+
+    /**
+     * Get release from MBID
+     * @param string $mbid Release MBID
+     * @param string[] $inc Include fields (artists, collections, labels, recordings or release-groups)
+     * @return Release Release object
+     * @throws NotFound Release not found
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
+     */
+    public function releaseFromMBID(string $mbid, array $inc = ['artists']): Release
+    {
+        $data = $this->lookup('release', $mbid, $inc);
+        return new Release($data);
     }
 
     /**

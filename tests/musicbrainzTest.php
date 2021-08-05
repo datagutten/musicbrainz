@@ -62,4 +62,13 @@ class musicbrainzTest extends TestCase
         $this->assertInstanceOf(seed\Release::class, $artist->releases[0]);
         $this->assertEquals('King Charles', $artist->name);
     }
+
+    public function testReleaseFromMBID()
+    {
+        $mb = new datagutten\musicbrainz\musicbrainz();
+        $release = $mb->releaseFromMBID('ae3c8989-1368-4f4f-a98d-8eb1cd94cd04', ['artists', 'recordings']);
+        $this->assertInstanceOf(seed\Release::class, $release);
+        $this->assertEquals('D\'e Glede', $release->title);
+        $this->assertEquals('Intronasjonalen', $release->mediums[0]->tracks[0]->title);
+    }
 }

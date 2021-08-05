@@ -10,7 +10,7 @@ class Recording extends Element
     /**
      * @var string Recording MBID
      */
-    public string $mbid;
+    public string $id;
     /**
      * @var Artist[] Recording Artists
      */
@@ -19,9 +19,13 @@ class Recording extends Element
      * @var string Recording title
      */
     public string $title;
+    /**
+     * @var string Recording ISRC
+     */
+    public string $isrc;
 
     public static array $required_fields = ['id', 'artists'];
-    public $fields = ['mbid', 'artists', 'length', 'title'];
+    public $fields = ['id', 'artists', 'length', 'title', 'isrc'];
 
     public function __construct($data)
     {

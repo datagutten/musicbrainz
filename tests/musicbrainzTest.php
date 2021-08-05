@@ -39,7 +39,7 @@ class musicbrainzTest extends TestCase
         @unlink($isrc_cache_file);
         $this->assertFileDoesNotExist($isrc_cache_file);
         $data = $mb->lookup_isrc_cache('NOUM70600600');
-        $this->assertSame('Det snør, det snør, tiddelibom', $data['recordings'][0]['title']);
+        $this->assertSame('Det snør, det snør, tiddelibom', $data[0]['title']);
         $this->assertFileExists($isrc_cache_file);
         $data_cache = json_decode(file_get_contents($isrc_cache_file), true);
         $this->assertSame('Det snør, det snør, tiddelibom', $data_cache['recordings'][0]['title']);

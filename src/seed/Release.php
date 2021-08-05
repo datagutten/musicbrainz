@@ -8,13 +8,17 @@ use DateTime;
 
 class Release extends Element
 {
-    protected $fields = ['name', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
-    public $data = [];
+    protected $fields = ['id', 'title', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
+
+    /**
+     * @var string Release MBID
+     */
+    public string $id;
 
     /**
      * @var string Release name
      */
-    public $name;
+    public string $title;
     public $type;
     public $status;
     public $script;
@@ -57,6 +61,35 @@ class Release extends Element
     function __construct($args = [])
     {
         $this->register_fields($args);
+        if (!empty($args['artist-credit']))
+        {
+            foreach ($args['artist-credit'] as $artist)
+            {
+                $artist = [
+                    'artist_name' => $artist['artist']['name'],
+                    'id' => $artist['artist']['id'],
+                    'type' => $artist['artist']['type'],
+                    'name' => $artist['name'],
+                    'disambiguation' => $artist['artist']['disambiguation'],
+                    'sort_name' => $artist['artist']['sort-name'],
+                    'join_phrase' => $artist['joinphrase'],
+                ];
+                $this->artist($artist);
+            }
+        }
+
+        foreach ($args['release-events'] as $event)
+        {
+            $this->event(DateTime::createFromFormat('Y-m-d', $event['date']));
+        }
+
+        if (!empty($args['media']))
+        {
+            foreach ($args['media'] as $medium)
+            {
+                $this->medium($medium);
+            }
+        }
     }
 
     public function artist($args): Artist

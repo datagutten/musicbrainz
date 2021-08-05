@@ -5,7 +5,9 @@ namespace datagutten\musicbrainz;
 
 
 use Composer\InstalledVersions;
+use datagutten\musicbrainz\exceptions\NotFound;
 use datagutten\musicbrainz\objects\Recording;
+use datagutten\musicbrainz\seed\Artist;
 use datagutten\tools\files\files;
 use DOMDocumentCustom;
 use InvalidArgumentException;
@@ -120,6 +122,21 @@ class musicbrainz
     }
 
     /**
+     * Get object from MusicBrainz API
+     * @param string $entity Entity
+     * @param string $value Query value (MBID)
+     * @param array $inc Include fields
+     * @return array
+     * @throws NotFound Query returned HTTP 404
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
+     */
+    protected function lookup(string $entity, string $value, array $inc): array
+    {
+        return $this->api_request(sprintf('/%s/%s?inc=%s', $entity, $value,
+            implode('+', $inc)), true);
+    }
+
+    /**
      * Get recording from MBID
      * @param string $mbid Recording MBID
      * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)
@@ -129,19 +146,55 @@ class musicbrainz
      */
     public function recordingFromMBID(string $mbid, array $inc = ['artists']): Recording
     {
-        $data = $this->api_request(sprintf('/recording/%s?inc=%s', $mbid, implode('+', $inc)), true);
+        $data = $this->lookup('recording', $mbid, $inc);
         return new Recording($data);
+    }
+
+    /**
+     * Find recordings by ISRC
+     * @param string $isrc ISRC to find
+     * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)
+     * @return Recording[] Array with recording objects
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
+     * @throws exceptions\NotFound Recording not found
+     */
+    public function recordingsFromISRC(string $isrc, array $inc = ['artists']): array
+    {
+        $recordings = [];
+        $data = $this->lookup('isrc', $isrc, $inc);
+        if (empty($data['recordings']))
+            throw new NotFound('No recordings found for ISRC ' . $isrc);
+        foreach ($data['recordings'] as $recording)
+        {
+            $recordings[] = new Recording($recording);
+        }
+        return $recordings;
+    }
+
+    /**
+     * Get artist from MBID
+     * @param string $mbid Artist MBID
+     * @param string[] $inc Include fields (recordings, releases, release-groups or works)
+     * @return Artist Artist object
+     * @throws NotFound Artist not found
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
+     */
+    public function artistFromMBID(string $mbid, array $inc = ['releases']): Artist
+    {
+        $data = $this->lookup('artist', $mbid, $inc);
+        return new Artist($data);
     }
 
     /**
      * Find recording by ISRC
      * @param string $isrc ISRC to find
-     * @param string $inc
+     * @param string $inc Include fields (artists, releases, isrcs or url-rels)
      * @return array
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
      * @throws exceptions\NotFound Recording not found
+     * @deprecated Use recordingsFromISRC
      */
-    function lookup_isrc(string $isrc, string $inc = 'releases')
+    function lookup_isrc(string $isrc, string $inc = 'releases'): array
     {
         return $this->api_request(sprintf('/isrc/%s?inc=%s', $isrc, $inc), true);
     }
@@ -149,21 +202,30 @@ class musicbrainz
     /**
      * Find recording by ISRC and cache the result
      * @param string $isrc ISRC to find
-     * @return array
-     * @throws exceptions\MusicBrainzErrorException
+     * @return Recording[] Array with recording objects
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
+     * @throws exceptions\NotFound Recording not found
      */
-	function lookup_isrc_cache(string $isrc)
-	{
-		$cache_file = files::path_join($this->isrc_cache_folder, $isrc.'.json');
-		if(file_exists($cache_file))
-			return json_decode(file_get_contents($cache_file), true);
-		else
-		{
-			$data=$this->lookup_isrc($isrc);
-			file_put_contents($cache_file, json_encode($data));
-			return $data;
-		}
-	}
+    function lookup_isrc_cache(string $isrc): array
+    {
+        $recordings = [];
+        $cache_file = files::path_join($this->isrc_cache_folder, $isrc . '.json');
+        if (file_exists($cache_file))
+            $data = json_decode(file_get_contents($cache_file), true);
+        else
+        {
+            $data = $this->lookup('isrc', $isrc, ['releases']);
+            if (empty($data['recordings']))
+                throw new NotFound('No recordings found for ISRC ' . $isrc);
+            file_put_contents($cache_file, json_encode($data));
+        }
+
+        foreach ($data['recordings'] as $recording)
+        {
+            $recordings[] = new Recording($recording);
+        }
+        return $recordings;
+    }
 
     /**
      * Get release information

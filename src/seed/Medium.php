@@ -6,20 +6,33 @@ namespace datagutten\musicbrainz\seed;
 
 class Medium extends Element
 {
-    protected $fields = ['format', 'name']; //position is a valid field in the documentation, but gives error
-    public $format;
+    protected $fields = ['format', 'title', 'position']; //position is a valid field in the documentation, but gives error
+    protected array $field_aliases = ['title' => 'name'];
+    protected array $fields_non_seed = ['position'];
+
+    /**
+     * @var string Medium format (CD, Digital Media, etc.)
+     */
+    public string $format;
     public $position;
-    public $name;
+    /**
+     * @var string Medium title
+     */
+    public string $title;
     /**
      * @var Track[]
      */
-    public $tracks = [];
+    public array $tracks = [];
 
     public function __construct($args)
     {
-        if(!empty($args['position']))
+        if (!empty($args['position']))
             $this->position = $args['position'];
         $this->register_fields($args);
+        foreach ($args['tracks'] as $track)
+        {
+            $this->track($track);
+        }
     }
 
     /**
@@ -36,7 +49,7 @@ class Medium extends Element
     public function save(string $prefix): array
     {
         $data = parent::save($prefix);
-        foreach($this->tracks as $key=>$track)
+        foreach ($this->tracks as $key => $track)
         {
             $data += $track->save(sprintf('%strack.%d.', $prefix, $key));
         }

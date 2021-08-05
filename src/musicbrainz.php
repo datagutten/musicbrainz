@@ -99,7 +99,7 @@ class musicbrainz
             $data = json_decode($response->body, true);
             if (!empty($data['error']))
                 if ($response->status_code == 404)
-                    throw new exceptions\NotFound($data['error'], $response);
+                    throw new exceptions\NotFound($data['error']);
                 else
                     throw new exceptions\MusicBrainzErrorException($data['error'], $response);
             else

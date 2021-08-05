@@ -75,22 +75,23 @@ class musicbrainz
      * @param string $uri URI
      * @param bool $json Fetch as json
      * @return array|SimpleXMLElement Returns array if $json=true
-     * @throws exceptions\MusicBrainzErrorException
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
+     * @throws exceptions\NotFound Query returned HTTP 404
      */
-    public function api_request(string $uri, $json=false)
+    public function api_request(string $uri, bool $json = false)
     {
-        $url='https://musicbrainz.org/ws/2'.$uri;
-        if($json)
-            $url.='&fmt=json';
+        $url = 'https://musicbrainz.org/ws/2' . $uri;
+        if ($json)
+            $url .= '&fmt=json';
         return self::handle_response($this->get($url));
-	}
+    }
 
     /**
      * Handle response from MusicBrainz
      * @param Requests_Response $response
      * @return array|SimpleXMLElement
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
-     * @throws exceptions\NotFound
+     * @throws exceptions\NotFound Query returned HTTP 404
      */
 	public static function handle_response(Requests_Response $response)
     {
@@ -123,7 +124,8 @@ class musicbrainz
      * @param string $mbid Recording MBID
      * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)
      * @return Recording Recording object
-     * @throws exceptions\MusicBrainzErrorException
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
+     * @throws exceptions\NotFound Recording not found
      */
     public function recordingFromMBID(string $mbid, array $inc = ['artists']): Recording
     {
@@ -136,12 +138,13 @@ class musicbrainz
      * @param string $isrc ISRC to find
      * @param string $inc
      * @return array
-     * @throws exceptions\MusicBrainzErrorException
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
+     * @throws exceptions\NotFound Recording not found
      */
-    function lookup_isrc(string $isrc, $inc = 'releases')
+    function lookup_isrc(string $isrc, string $inc = 'releases')
     {
-		return $this->api_request(sprintf('/isrc/%s?inc=%s',$isrc,$inc), true);
-	}
+        return $this->api_request(sprintf('/isrc/%s?inc=%s', $isrc, $inc), true);
+    }
 
     /**
      * Find recording by ISRC and cache the result
@@ -168,7 +171,8 @@ class musicbrainz
      * @param string $include
      * @param bool $json Fetch as json
      * @return array|SimpleXMLElement Return SimpleXmlElement if $json=false
-     * @throws exceptions\MusicBrainzErrorException
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
+     * @throws exceptions\NotFound Query returned HTTP 404
      */
 	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)
 	{
@@ -323,8 +327,8 @@ class musicbrainz
      * Get release by barcode
      * @param string $barcode Release barcode
      * @return string Release MBID
-     * @throws exceptions\MusicBrainzErrorException
-     * @throws exceptions\MusicBrainzException
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
+     * @throws exceptions\NotFound Release not found
      */
     function release_by_barcode(string $barcode): string
     {
@@ -344,6 +348,6 @@ class musicbrainz
             }
         }
 
-        throw new exceptions\MusicBrainzException('No release found with barcode ' . $barcode);
+        throw new exceptions\NotFound('No release found with barcode ' . $barcode);
     }
 }

@@ -94,16 +94,14 @@ class musicbrainz
      */
 	public static function handle_response(Requests_Response $response)
     {
-        if($response->status_code===404)
-        {
-            //TODO: Convert/format error message?
-            throw new exceptions\NotFound($response->body);
-        }
         if($response->body[0]=='{')
         {
             $data = json_decode($response->body, true);
-            if(!empty($data['error']))
-                throw new exceptions\MusicBrainzErrorException($data['error'], $response);
+            if (!empty($data['error']))
+                if ($response->status_code == 404)
+                    throw new exceptions\NotFound($data['error'], $response);
+                else
+                    throw new exceptions\MusicBrainzErrorException($data['error'], $response);
             else
                 return $data;
         }

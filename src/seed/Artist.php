@@ -6,11 +6,13 @@ namespace datagutten\musicbrainz\seed;
 
 class Artist extends Element
 {
-    protected $fields = ['mbid', 'name', 'artist_name', 'join_phrase'];
+    protected $fields = ['id', 'name', 'artist_name', 'join_phrase'];
+    protected array $field_aliases = ['id' => 'mbid'];
+
     /**
      * @var string Artist MBID
      */
-    public string $mbid;
+    public string $id;
     /**
      * @var string The name of the artist, as credited on the release. Optional, if omitted it will default to the artist’s current name
      *
@@ -28,6 +30,14 @@ class Artist extends Element
      * @var Release[] Artist releases
      */
     public array $releases;
+    /**
+     * @var string Artist disambiguation
+     */
+    public string $disambiguation;
+    /**
+     * @var string Artist type (person, group, etc.)
+     */
+    public string $type;
 
     public function __construct(array $args)
     {

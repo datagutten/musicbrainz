@@ -16,7 +16,7 @@ class ReleaseTest extends TestCase
         $medium = $release->medium(['position'=>1, 'name'=>'test']);
         $this->assertInstanceOf(seed\Medium::class, $medium);
         $this->assertSame(1, $medium->position);
-        $this->assertSame('test', $medium->name);
+        $this->assertSame('test', $medium->title);
         $this->assertArrayHasKey('mediums.0.name', $release->save());
     }
 

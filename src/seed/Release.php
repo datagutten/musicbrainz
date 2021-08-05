@@ -80,7 +80,9 @@ class Release extends Element
 
         foreach ($args['release-events'] as $event)
         {
-            $this->event(DateTime::createFromFormat('Y-m-d', $event['date']));
+            $date = DateTime::createFromFormat('Y-m-d', $event['date']);
+            if ($date !== false)
+                $this->event($date);
         }
 
         if (!empty($args['media']))

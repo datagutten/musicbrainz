@@ -9,6 +9,7 @@
         "ext-simplexml": "*",
         "datagutten/tools": "^1.8",
         "rmccue/requests": "^1.7",
+        "symfony/polyfill-php80": "^1.23",
         "symfony/process": "^5.3",
         "datagutten/audio-metadata": "^3.1"
     },

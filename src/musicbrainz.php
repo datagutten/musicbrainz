@@ -105,7 +105,7 @@ class musicbrainz
             else
                 return $data;
         }
-        elseif(substr($response->body, 0, 5)==='<?xml')
+        elseif (str_starts_with($response->body, '<?xml'))
         {
             $data = simplexml_load_string($response->body);
 

@@ -13,6 +13,18 @@ abstract class Element extends SimpleArrayAccess
      * @var array Field names
      */
     protected $fields = [];
+    /**
+     * @var array Field name aliases for release editor seeding. API field name as key, seed field name as value
+     */
+    protected array $field_aliases = ['id' => 'mbid', 'title' => 'name'];
+    /**
+     * @var array Fields to exclude from release editor seeding
+     */
+    protected array $fields_non_seed = [];
+    /**
+     * @var array Raw data from API
+     */
+    public array $data;
 
     /**
      * Register valid arguments as properties
@@ -20,13 +32,21 @@ abstract class Element extends SimpleArrayAccess
      */
     public function register_fields(array $args)
     {
-        if(empty($this->fields))
+        $this->data = $args; //Save raw data
+        if (empty($this->fields))
             throw new RuntimeException('No fields found');
 
         foreach ($this->fields as $field)
         {
             if (!empty($args[$field]))
                 $this->$field = $args[$field];
+        }
+
+        //Register alias fields
+        foreach ($this->field_aliases as $field => $alias)
+        {
+            if (!empty($args[$alias]))
+                $this->$field = $args[$alias];
         }
     }
 
@@ -38,10 +58,18 @@ abstract class Element extends SimpleArrayAccess
     public function save(string $prefix): array
     {
         $data = [];
-        foreach ($this->fields as $field)
+        foreach (array_diff($this->fields, $this->fields_non_seed) as $field)
         {
             if (!empty($this->$field))
-                $data[$prefix.$field] = $this->$field;
+            {
+                if (!empty($this->field_aliases[$field]))
+                {
+                    $alias = $this->field_aliases[$field];
+                    $data[$prefix . $alias] = $this->$field;
+                }
+                else
+                    $data[$prefix . $field] = $this->$field;
+            }
         }
         return $data;
     }

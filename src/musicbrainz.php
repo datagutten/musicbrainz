@@ -38,8 +38,14 @@ class musicbrainz
      */
     public string $version;
 
+    /**
+     * @var array $config Configuration parameters
+     */
+    protected array $config = [];
+
     function __construct($config = ['isrc_cache_folder' => ''])
     {
+        $this->config = $config;
         $this->version = InstalledVersions::getVersion('datagutten/musicbrainz');
         $this->session = new Requests_Session(
             'https://musicbrainz.org/ws/2',
@@ -393,10 +399,9 @@ class musicbrainz
             $client = 'datagutten-musicbrainz-'.$this->version;
 	    $client = urlencode($client);
 
-		$config = require 'config.php';
         try
         {
-            $options = array('auth' => new Requests_Auth_Digest(array($config['mb_username'], $config['mb_password'])));
+            $options = array('auth' => new Requests_Auth_Digest(array($this->config['mb_username'], $this->config['mb_password'])));
             $response = $this->session->post('/ws/2/recording/?client=' . $client . '&fmt=json', array('Content-Type' => 'text/xml'), $xml, $options);
         }
         catch (Requests_Exception $e)

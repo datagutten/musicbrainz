@@ -122,6 +122,11 @@ class musicbrainz
             throw new exceptions\MusicBrainzErrorException("Unknown response format", $response);
     }
 
+    public static function mbidFromURL(string $url): string
+    {
+        return preg_replace('#(?:.+/)?([a-f0-9\-]+)#', '$1', $url);
+    }
+
     /**
      * Get object from MusicBrainz API
      * @param string $entity Entity

@@ -37,7 +37,7 @@ class Track extends SimpleArrayAccess
         {
             foreach ($data['recordings'] as $recording)
             {
-                $this->recordings[] = Recording::fromAcoustId($recording);
+                $this->recordings[] = new Recording($recording);
             }
         }
     }

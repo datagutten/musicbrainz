@@ -23,7 +23,7 @@ class ArtistTest extends TestCase
     public function testArtist()
     {
         $artist = new Artist(['mbid' => '710e234d-e1e2-4f30-89ec-01bd71f6e4a3', 'name' => 'OsloEss', 'artist_name' => 'Oslo Ess', 'join_phrase' => 'feat.']);
-        $this->assertSame('710e234d-e1e2-4f30-89ec-01bd71f6e4a3', $artist->mbid);
+        $this->assertSame('710e234d-e1e2-4f30-89ec-01bd71f6e4a3', $artist->id);
         $this->assertSame('OsloEss', $artist->name);
         $this->assertSame('Oslo Ess', $artist->artist_name);
         $this->assertSame('feat.', $artist->join_phrase);

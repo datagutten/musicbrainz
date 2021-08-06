@@ -13,7 +13,7 @@ class seedTest extends TestCase
     public function testTrack()
     {
         $track = new seed\Track(['name' => 'Gøy på landet']);
-        $this->assertSame('Gøy på landet', $track->name);
+        $this->assertSame('Gøy på landet', $track->title);
         $array = $track->save('mediums.1.track.0.');
         $this->assertArrayHasKey('mediums.1.track.0.name', $array);
         $this->assertSame('Gøy på landet', $array['mediums.1.track.0.name']);

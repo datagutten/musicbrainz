@@ -24,12 +24,12 @@ class Recording extends Element
      */
     public string $isrc;
 
-    public static array $required_fields = ['id', 'artists'];
     public $fields = ['id', 'artists', 'length', 'title', 'isrc'];
 
     public function __construct($data)
     {
         parent::register_fields($data);
+        $this->artists = [];
         if (isset($data['artists']))
         {
             foreach ($data['artists'] as $artist)
@@ -48,16 +48,15 @@ class Recording extends Element
                     ]);
             }
         }
-        $this->title = $data['title'];
     }
 
+    /**
+     * @param $data
+     * @return Recording
+     * @deprecated Use constructor
+     */
     public static function fromAcoustId($data): Recording
     {
-        return new static([
-            'mbid' => $data['id'],
-            'title' => $data['title'],
-            'artists' => $data['artists'],
-            'duration' => $data['duration'] ?? null,
-        ]);
+        return new static($data);
     }
 }

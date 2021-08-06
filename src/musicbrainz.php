@@ -36,25 +36,25 @@ class musicbrainz
      */
     public $version;
 
-    function __construct($config=['isrc_cache_folder'=>''])
-	{
-		$this->version = InstalledVersions::getVersion('datagutten/musicbrainz');
+    function __construct($config = ['isrc_cache_folder' => ''])
+    {
+        $this->version = InstalledVersions::getVersion('datagutten/musicbrainz');
         $this->session = new Requests_Session(
             'https://musicbrainz.org/ws/2',
             array(),
-            array('useragent'=>sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
-        if(!empty($config['isrc_cache_folder']))
-            $this->isrc_cache_folder = $config['isrc_cache_folder'];
-        else
-            $this->isrc_cache_folder = files::path_join(__DIR__, 'cache', 'ISRC');
-
-        if(!file_exists($this->isrc_cache_folder))
+            array('useragent' => sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
+        if (!empty($config['isrc_cache_folder']))
         {
-            $status = @mkdir($this->isrc_cache_folder, 0777, true);
-            if($status===false)
-                printf('Unable to create ISRC cache folder at %s', $this->isrc_cache_folder);
+            $this->isrc_cache_folder = $config['isrc_cache_folder'];
+
+            if (!file_exists($this->isrc_cache_folder))
+            {
+                $status = @mkdir($this->isrc_cache_folder, 0777, true);
+                if ($status === false)
+                    printf('Unable to create ISRC cache folder at %s', $this->isrc_cache_folder);
+            }
         }
-	}
+    }
 
     /**
      * Do a HTTP GET to MusicBrainz

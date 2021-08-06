@@ -23,7 +23,7 @@ class musicbrainz
     /**
      * @var float Last API request time as unix timestamp with microseconds. Used for rate limiting
      */
-    public float $last_request_time;
+    public float $last_request_time = 0;
 
     /**
      * @var Requests_Session
@@ -65,11 +65,11 @@ class musicbrainz
      */
     protected function get(string $url): Requests_Response
     {
-        if($this->last_request_time!==false) //Do not sleep on first execution
+        if ($this->last_request_time > 0) //Do not sleep on first execution
         {
-            $diff=microtime(true)-$this->last_request_time;
-		    if($diff<1)
-				time_sleep_until($this->last_request_time+1);
+            $diff = microtime(true) - $this->last_request_time;
+            if ($diff < 1)
+                time_sleep_until($this->last_request_time + 1);
         }
         $response = $this->session->get($url);
         $this->last_request_time=microtime(true);

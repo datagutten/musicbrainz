@@ -20,21 +20,23 @@ use SimpleXMLElement;
 
 class musicbrainz
 {
-	public $error;
-	public $last_request_time;
-	public $depend;
+    /**
+     * @var float Last API request time as unix timestamp with microseconds. Used for rate limiting
+     */
+    public float $last_request_time;
+
     /**
      * @var Requests_Session
      */
-	public $session;
+    public Requests_Session $session;
     /**
      * @var string Folder for ISRC cache files
      */
-	public $isrc_cache_folder;
+    public string $isrc_cache_folder;
     /**
-     * @var string
+     * @var string Project version
      */
-    public $version;
+    public string $version;
 
     function __construct($config = ['isrc_cache_folder' => ''])
     {

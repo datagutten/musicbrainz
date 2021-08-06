@@ -16,6 +16,7 @@ jobs:
       matrix:
         php: [ '7.4', '8.0' ]
         os: [ ubuntu-latest, windows-latest ]
+        dependencies: [ lowest, highest, locked ]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,27 +37,20 @@ jobs:
           coverage: xdebug
           extensions: curl
 
-      - name: Install dependencies
+      - name: Install locked dependencies with composer
+        if: matrix.dependencies == 'locked'
         run: composer install --prefer-dist --no-progress
+
+      - name: Install lowest dependencies with composer
+        if: matrix.dependencies == 'lowest'
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-lowest
+
+      - name: Install highest dependencies with composer
+        if: matrix.dependencies == 'highest'
+        run: composer update --no-ansi --no-interaction --no-progress
 
       - name: Run tests
         run: vendor/bin/phpunit
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
-
-  prefer_lowest:
-    name: 'Prefer lowest dependency versions'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          extensions: curl
-
-      - name: Install dependencies
-        run: composer update --prefer-lowest --no-progress
-
-      - name: Run tests
-        run: vendor/bin/phpunit

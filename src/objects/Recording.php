@@ -29,7 +29,7 @@ class Recording extends Element
 
     public function __construct($data)
     {
-        $this->mbid = $data['mbid'] ?? $data['id'];
+        parent::register_fields($data);
         if (isset($data['artists']))
         {
             foreach ($data['artists'] as $artist)

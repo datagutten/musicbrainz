@@ -60,6 +60,11 @@ class Submission extends SimpleArrayAccess
         return $submission;
     }
 
+    /**
+     * Create a submission with metadata from TIDAL
+     * @param \datagutten\Tidal\elements\Track $track
+     * @return Submission
+     */
     public static function fromTidal(\datagutten\Tidal\elements\Track $track): Submission
     {
         $submission = new static();

@@ -70,6 +70,6 @@ class musicbrainzTest extends TestCase
         $this->assertInstanceOf(seed\Release::class, $release);
         $this->assertEquals('D\'e Glede', $release->title);
         $this->assertEquals('Intronasjonalen', $release->mediums[0]->tracks[0]->title);
-        $this->assertEquals('2244cf5d-9fa0-3f80-90c8-fcbf42dfc6a9', $release->mediums[0]->tracks[0]->id);
+        $this->assertEquals('9d9e6138-118e-41ea-8ec0-fdfe85f40e04', $release->mediums[0]->tracks[0]->id);
     }
 }

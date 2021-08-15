@@ -31,6 +31,7 @@ class Medium extends Element
         $this->register_fields($args);
         foreach ($args['tracks'] ?? [] as $track)
         {
+            $track['id'] = $track['recording']['id'];
             $this->track($track);
         }
     }

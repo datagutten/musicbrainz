@@ -263,6 +263,7 @@ class musicbrainz
      * @return array|SimpleXMLElement Return SimpleXmlElement if $json=false
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
      * @throws exceptions\NotFound Query returned HTTP 404
+     * @deprecated Use releaseFromMBID
      */
 	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)
 	{
@@ -348,6 +349,7 @@ class musicbrainz
      * @param SimpleXMLElement $release Return of getrelease() with 'recordings' as second parameter
      * @return string
      * @throws exceptions\MusicBrainzException
+     * @deprecated Use build_isrc_list_array
      */
 	public static function build_isrc_list(array $isrc_tracks, SimpleXMLElement $release): string
     {

@@ -6,7 +6,11 @@ namespace datagutten\musicbrainz\seed;
 
 class Track extends Element
 {
-    protected $fields = ['title', 'number', 'recording', 'length'];
+    protected $fields = ['id', 'title', 'number', 'recording', 'length'];
+    /**
+     * @var string Track MBID
+     */
+    public string $id;
     /**
      * @var string Track name
      */

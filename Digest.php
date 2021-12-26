@@ -1,4 +1,7 @@
 <?php
+
+use WpOrg\Requests;
+
 /**
  * Digest Authentication provider
  *
@@ -15,17 +18,18 @@
  * @package Requests
  * @subpackage Authentication
  */
-class Requests_Auth_Digest implements Requests_Auth {
-	/**
-	 * Username
-	 *
-	 * @var string
-	 */
-	public $user;
+class Requests_Auth_Digest implements Requests\Auth
+{
+    /**
+     * Username
+     *
+     * @var string
+     */
+    public $user;
 
-	/**
-	 * Password
-	 *
+    /**
+     * Password
+     *
 	 * @var string
 	 */
 	public $pass;
@@ -52,20 +56,21 @@ class Requests_Auth_Digest implements Requests_Auth {
 		}
 	}
 
-	/**
-	 * Register the necessary callbacks
-	 *
-	 * @see curl_before_send
-	 * @see fsockopen_header
-	 * @param Requests_Hooks $hooks Hook system
-	 */
-	public function register(Requests_Hooks $hooks) {
-		$hooks->register('curl.before_send', array(&$this, 'curl_before_send'));
-		$hooks->register('fsockopen.after_request', array(&$this, 'fsockopen_request'));
-		$hooks->register('requests.before_request', array(&$this, 'save_request'));
-	}
+    /**
+     * Register the necessary callbacks
+     *
+     * @param Requests\Hooks $hooks Hook system
+     * @see fsockopen_header
+     * @see curl_before_send
+     */
+	public function register(Requests\Hooks $hooks)
+    {
+        $hooks->register('curl.before_send', array(&$this, 'curl_before_send'));
+        $hooks->register('fsockopen.after_request', array(&$this, 'fsockopen_request'));
+        $hooks->register('requests.before_request', array(&$this, 'save_request'));
+    }
 
-	function save_request($url, $headers, $data, $type, $options)
+    function save_request($url, $headers, $data, $type, $options)
     {
         $this->request = array('url'=>$url, 'headers'=>$headers, 'data'=>$data, 'type'=>$type, 'options'=>$options);
     }

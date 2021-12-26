@@ -13,10 +13,8 @@ use datagutten\tools\files\files;
 use DOMDocumentCustom;
 use InvalidArgumentException;
 use Requests_Auth_Digest;
-use Requests_Exception;
-use Requests_Response;
-use Requests_Session;
 use SimpleXMLElement;
+use WpOrg\Requests;
 
 class musicbrainz
 {
@@ -26,9 +24,9 @@ class musicbrainz
     public float $last_request_time = 0;
 
     /**
-     * @var Requests_Session
+     * @var Requests\Session
      */
-    public Requests_Session $session;
+    public Requests\Session $session;
     /**
      * @var string Folder for ISRC cache files
      */
@@ -47,7 +45,7 @@ class musicbrainz
     {
         $this->config = $config;
         $this->version = InstalledVersions::getVersion('datagutten/musicbrainz');
-        $this->session = new Requests_Session(
+        $this->session = new Requests\Session(
             'https://musicbrainz.org/ws/2',
             array(),
             array('useragent' => sprintf('MusicBrainz PHP class/%s ( https://github.com/datagutten/musicbrainz )', $this->version)));
@@ -67,9 +65,9 @@ class musicbrainz
     /**
      * Do a HTTP GET to MusicBrainz
      * @param string $url URL
-     * @return Requests_Response
+     * @return Requests\Response
      */
-    protected function get(string $url): Requests_Response
+    protected function get(string $url): Requests\Response
     {
         if ($this->last_request_time > 0) //Do not sleep on first execution
         {
@@ -78,8 +76,8 @@ class musicbrainz
                 time_sleep_until($this->last_request_time + 1);
         }
         $response = $this->session->get($url);
-        $this->last_request_time=microtime(true);
-		return $response;
+        $this->last_request_time = microtime(true);
+        return $response;
     }
 
     /**
@@ -99,14 +97,14 @@ class musicbrainz
 
     /**
      * Handle response from MusicBrainz
-     * @param Requests_Response $response
+     * @param Requests\Response $response
      * @return array|SimpleXMLElement
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
      * @throws exceptions\NotFound Query returned HTTP 404
      */
-	public static function handle_response(Requests_Response $response)
+    public static function handle_response(Requests\Response $response)
     {
-        if($response->body[0]=='{')
+        if ($response->body[0] == '{')
         {
             $data = json_decode($response->body, true);
             if (!empty($data['error']))

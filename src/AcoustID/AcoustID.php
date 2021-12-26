@@ -7,16 +7,14 @@ namespace datagutten\musicbrainz\AcoustID;
 use datagutten\musicbrainz\exceptions\AcoustIdException;
 use datagutten\musicbrainz\exceptions\NotFound;
 use FileNotFoundException;
-use Requests_Exception;
-use Requests_Response;
-use Requests_Session;
+use WpOrg\Requests;
 
 class AcoustID
 {
     /**
-     * @var Requests_Session
+     * @var Requests\Session
      */
-    private Requests_Session $session;
+    private Requests\Session $session;
     /**
      * @var string
      */
@@ -33,18 +31,18 @@ class AcoustID
      */
     public function __construct(string $client_key, string $user_key = null)
     {
-        $this->session = new Requests_Session('https://api.acoustid.org/v2/');
+        $this->session = new Requests\Session('https://api.acoustid.org/v2/');
         $this->client_key = $client_key;
         if (!empty($user_key))
             $this->user_key = $user_key;
     }
 
     /**
-     * @param Requests_Response $response
+     * @param Requests\Response $response
      * @return mixed
      * @throws AcoustIdException
      */
-    protected static function handleResponse(Requests_Response $response): array
+    protected static function handleResponse(Requests\Response $response): array
     {
         $data = json_decode($response->body, true);
         if (empty($data))
@@ -71,7 +69,7 @@ class AcoustID
             $response = $this->session->get($uri . '?' . $query);
         }
             /** @noinspection PhpRedundantCatchClauseInspection */
-        catch (Requests_Exception $e)
+        catch (Requests\Exception $e)
         {
             throw new AcoustIdException($e->getMessage(), 0, $e);
         }

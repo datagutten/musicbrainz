@@ -40,6 +40,13 @@ class Track extends Element
     public function __construct($args)
     {
         $this->register_fields($args);
+        foreach ($args['artist-credit'] ?? [] as $credit)
+        {
+            $artist = $this->artist($credit['artist']);
+            $artist->artist_name = $artist->name;
+            $artist->name = $credit['name'];
+            $artist->join_phrase = $credit['joinphrase'];
+        }
     }
 
     public function artist($args): Artist

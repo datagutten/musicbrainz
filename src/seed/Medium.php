@@ -14,7 +14,10 @@ class Medium extends Element
      * @var string Medium format (CD, Digital Media, etc.)
      */
     public string $format;
-    public string $position;
+    /**
+     * @var int Medium position
+     */
+    public int $position;
     /**
      * @var string Medium title
      */

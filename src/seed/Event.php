@@ -11,13 +11,13 @@ class Event extends Element
     /**
      * @var DateTime Event date
      */
-    public $dateTime;
+    public DateTime $dateTime;
     /**
      * @var string The country of the release event. May be any valid country ISO code (for example: GB, US, FR)
      */
-    public $country;
+    public string $country;
 
-    function __construct(DateTime $dateTime, $country = '')
+    function __construct(DateTime $dateTime, string $country = '')
     {
         $this->dateTime = $dateTime;
         $this->country = $country;

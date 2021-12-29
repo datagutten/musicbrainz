@@ -6,7 +6,7 @@ namespace datagutten\musicbrainz\seed;
 
 class Medium extends Element
 {
-    protected $fields = ['format', 'title', 'position']; //position is a valid field in the documentation, but gives error
+    protected array $fields = ['format', 'title', 'position']; //position is a valid field in the documentation, but gives error
     protected array $field_aliases = ['title' => 'name'];
     protected array $fields_non_seed = ['position'];
 
@@ -14,7 +14,7 @@ class Medium extends Element
      * @var string Medium format (CD, Digital Media, etc.)
      */
     public string $format;
-    public $position;
+    public string $position;
     /**
      * @var string Medium title
      */

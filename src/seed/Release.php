@@ -8,7 +8,7 @@ use DateTime;
 
 class Release extends Element
 {
-    protected $fields = ['id', 'title', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
+    protected array $fields = ['id', 'title', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
 
     /**
      * @var string Release MBID
@@ -19,12 +19,12 @@ class Release extends Element
      * @var string Release name
      */
     public string $title;
-    public $type;
-    public $status;
-    public $script;
-    public $packaging;
-    public $action = 'https://musicbrainz.org/release/add';
-    public $barcode;
+    public string $type;
+    public string $status;
+    public string $script;
+    public string $packaging;
+    public string $action = 'https://musicbrainz.org/release/add';
+    public string $barcode;
 
     /**
      * @var Event[] Release events

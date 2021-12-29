@@ -12,7 +12,7 @@ abstract class Element extends SimpleArrayAccess
     /**
      * @var array Field names
      */
-    protected $fields = [];
+    protected array $fields = [];
     /**
      * @var array Field name aliases for release editor seeding. API field name as key, seed field name as value
      */

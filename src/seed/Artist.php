@@ -6,7 +6,7 @@ namespace datagutten\musicbrainz\seed;
 
 class Artist extends Element
 {
-    protected $fields = ['id', 'name', 'artist_name', 'join_phrase'];
+    protected array $fields = ['id', 'name', 'artist_name', 'join_phrase'];
     protected array $field_aliases = ['id' => 'mbid'];
 
     /**

@@ -24,7 +24,7 @@ class Recording extends Element
      */
     public string $isrc;
 
-    public $fields = ['id', 'artists', 'length', 'title', 'isrc'];
+    public array $fields = ['id', 'artists', 'length', 'title', 'isrc'];
 
     public function __construct($data)
     {

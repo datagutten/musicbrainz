@@ -9,27 +9,28 @@ use DOMElement;
 
 class seed
 {
-	/**
-	 * @var DOMDocumentCustom
-	 */
-	public $dom;
+    /**
+     * @var DOMDocumentCustom
+     */
+    public DOMDocumentCustom $dom;
 
-	/**
-	 * @var DOMElement
-	 */
-	public $fieldset;
-	public $form;
-	public $body;
+    /**
+     * @var DOMElement
+     */
+    public DOMElement $fieldset;
+    public DOMElement $form;
+    public DOMElement $body;
 
-	function __construct()
-	{
-		$this->dom = new DOMDocumentCustom;
-		$this->dom->formatOutput = true;
-	}
-	public function build_page()
-	{
-		$this->body=$this->dom->createElement('body');
-		$this->form=$this->dom->createElement_simple('form',$this->body,array('method'=>'POST','action'=>'https://musicbrainz.org/release/add'));
+    function __construct()
+    {
+        $this->dom = new DOMDocumentCustom;
+        $this->dom->formatOutput = true;
+    }
+
+    public function build_page()
+    {
+        $this->body = $this->dom->createElement('body');
+        $this->form = $this->dom->createElement_simple('form', $this->body, array('method' => 'POST', 'action' => 'https://musicbrainz.org/release/add'));
 		$this->fieldset=$this->dom->createElement_simple('fieldset',$this->form);
 		$this->dom->createElement_simple('input',$this->form,array('type'=>'submit','value'=>'seed'));
 		$this->dom->createElement_simple('legend',$this->fieldset,false,'Release information');

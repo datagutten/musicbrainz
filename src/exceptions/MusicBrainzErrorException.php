@@ -5,6 +5,7 @@ namespace datagutten\musicbrainz\exceptions;
 
 
 use Exception;
+use WpOrg\Requests;
 
 /**
  * MusicBrainz API returned error
@@ -12,7 +13,7 @@ use Exception;
  */
 class MusicBrainzErrorException extends MusicBrainzException
 {
-    public $response;
+    public Requests\Response $response;
     public function __construct($message, $response, $code = 0, Exception $previous = null) {
         $this->response = $response;
         parent::__construct($message, $code, $previous);

@@ -6,9 +6,9 @@ namespace datagutten\musicbrainz\seed;
 
 class URL extends Element
 {
-    protected $fields = ['url', 'link_type'];
-    public $url;
-    public $link_type;
+    protected array $fields = ['url', 'link_type'];
+    public string $url;
+    public int $link_type;
     /**
      * Stream for free
      */

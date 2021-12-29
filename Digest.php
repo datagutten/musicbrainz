@@ -40,17 +40,21 @@ class Requests_Auth_Digest implements Requests\Auth
      */
 	private $request;
     private $response_sent = false;
-	/**
-	 * Constructor
-	 *
-	 * @throws Requests_Exception On incorrect number of arguments (`authdigestbadargs`)
-	 * @param array|null $args Array of user and password. Must have exactly two elements
-	 */
-	public function __construct($args = null) {
-		if (is_array($args)) {
-			if (count($args) !== 2) {
-				throw new Requests_Exception('Invalid number of arguments', 'authdigestbadargs');
-			}
+
+    /**
+     * Constructor
+     *
+     * @param array|null $args Array of user and password. Must have exactly two elements
+     * @throws Requests\Exception On incorrect number of arguments (`authdigestbadargs`)
+     */
+	public function __construct(array $args = null)
+    {
+        if (is_array($args))
+        {
+            if (count($args) !== 2)
+            {
+                throw new Requests\Exception('Invalid number of arguments', 'authdigestbadargs');
+            }
 
 			list($this->user, $this->pass) = $args;
 		}
@@ -99,7 +103,7 @@ class Requests_Auth_Digest implements Requests\Auth
         $uri = parse_url($this->request['url'], PHP_URL_PATH);
         $response_header = $this->calculate_response($matches[1], $matches[2], $matches[3], $matches[4], $this->request['type'], $uri);
 
-        $transport = new Requests_Transport_fsockopen();
+        $transport = new Requests\Transport\fsockopen();
 
         $this->request['headers']['Authorization']=$response_header;
         $this->response_sent = true;

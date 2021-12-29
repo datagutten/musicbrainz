@@ -404,7 +404,8 @@ class musicbrainz
             $options = array('auth' => new Requests_Auth_Digest(array($this->config['mb_username'], $this->config['mb_password'])));
             $response = $this->session->post('/ws/2/recording/?client=' . $client . '&fmt=json', array('Content-Type' => 'text/xml'), $xml, $options);
         }
-        catch (Requests_Exception $e)
+            /** @noinspection PhpRedundantCatchClauseInspection */
+        catch (Requests\Exception $e)
         {
             throw new exceptions\MusicBrainzException($e->getMessage(), 0, $e);
         }

@@ -6,9 +6,9 @@ namespace datagutten\musicbrainz\seed;
 
 class Track extends Element
 {
-    protected array $fields = ['id', 'title', 'number', 'recording', 'length'];
+    protected array $fields = ['id', 'title', 'number', 'length'];
     /**
-     * @var string Track MBID
+     * @var string Recording MBID
      */
     public string $id;
     /**
@@ -19,10 +19,6 @@ class Track extends Element
      * @var string Track number
      */
     public string $number;
-    /**
-     * @var string Recording MBID
-     */
-    public string $recording;
     /**
      * @var int Track length in milliseconds
      */

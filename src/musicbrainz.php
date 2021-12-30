@@ -469,7 +469,7 @@ class musicbrainz
      * @param seed\Element $entity Entity class
      * @return array
      */
-    public function get_release_links(seed\Element $entity): array
+    public function get_links(seed\Element $entity): array
     {
         $response = $this->get($entity->link());
         $dom = new DOMDocument();

@@ -256,34 +256,6 @@ class musicbrainz
     }
 
     /**
-     * Get release information
-     * @param string|array $id_or_metadata ID string or metadata array
-     * @param string $include
-     * @param bool $json Fetch as json
-     * @return array|SimpleXMLElement Return SimpleXmlElement if $json=false
-     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
-     * @throws exceptions\NotFound Query returned HTTP 404
-     * @deprecated Use releaseFromMBID
-     */
-	function getrelease($id_or_metadata,$include='artist-credits+labels+discids+recordings+tags+media+label-rels', $json=false)
-	{
-		if(is_string($id_or_metadata))
-			$id=$id_or_metadata;
-		elseif(is_array($id_or_metadata) && empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
-		{
-            throw new InvalidArgumentException('Tag MUSICBRAINZ_ALBUMID not set');
-	   	}
-		elseif(!empty($id_or_metadata['MUSICBRAINZ_ALBUMID']))
-			$id=$id_or_metadata['MUSICBRAINZ_ALBUMID'];
-		else
-		{
-			throw new InvalidArgumentException('Parameter has invalid data type: '.gettype($id_or_metadata));
-		}
-
-		return $this->api_request('/release/'.$id.'?inc='.$include, $json);
-	}
-
-    /**
      * Find the first flac file in a folder
      * @param string $dir Directory to search
      * @return string File name
@@ -406,7 +378,6 @@ class musicbrainz
             $options = array('auth' => new Requests_Auth_Digest(array($this->config['mb_username'], $this->config['mb_password'])));
             $response = $this->session->post('/ws/2/recording/?client=' . $client . '&fmt=json', array('Content-Type' => 'text/xml'), $xml, $options);
         }
-            /** @noinspection PhpRedundantCatchClauseInspection */
         catch (Requests\Exception $e)
         {
             throw new exceptions\MusicBrainzException($e->getMessage(), 0, $e);

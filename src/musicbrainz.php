@@ -10,7 +10,9 @@ use datagutten\musicbrainz\objects\Recording;
 use datagutten\musicbrainz\seed\Artist;
 use datagutten\musicbrainz\seed\Release;
 use datagutten\tools\files\files;
+use DOMDocument;
 use DOMDocumentCustom;
+use DOMXPath;
 use InvalidArgumentException;
 use Requests_Auth_Digest;
 use SimpleXMLElement;
@@ -439,5 +441,54 @@ class musicbrainz
         }
 
         throw new exceptions\NotFound('No release found with barcode ' . $barcode);
+    }
+
+    /**
+     * Extract favicons from MusicBrainz CSS
+     * @param string $path Path to save icon files
+     * @return array Array with CSS key as key and file path as value
+     */
+    public function download_favicons(string $path): array
+    {
+        $response = $this->get('https://staticbrainz.org/MB/icons-d5804db.css');
+        preg_match_all('#\.([a-z]+)-favicon\s?{background-image:url\(data:image/(\w+);base64,([a-zA-Z0-9+/=]+)#', $response->body, $matches);
+        $files = [];
+        foreach (array_keys($matches[0]) as $key)
+        {
+            $file = $matches[1][$key] . '.' . $matches[2][$key];
+            $data = base64_decode($matches[3][$key]);
+            $file = files::path_join($path, $file);
+            file_put_contents($file, $data);
+            $files[$matches[1][$key]] = $file;
+        }
+        return $files;
+    }
+
+    /**
+     * Scrape external links with icons from release page
+     * @param string $mbid Release MBID
+     * @return array
+     */
+    public function get_release_links(string $mbid): array
+    {
+        $response = $this->get('https://musicbrainz.org/release/' . $mbid);
+        $dom = new DOMDocument();
+        @$dom->loadHTML($response->body);
+        $xpath = new DOMXPath($dom);
+        $links = [];
+
+        foreach ($xpath->query('//ul[@class="external_links"]/li') as $link)
+        {
+            $icon = $link->getAttribute('class');
+            $icon = preg_replace('/(.+)-favicon/', '$1', $icon);
+            $href = $link->firstChild;
+
+            $links[] = [
+                'url' => 'https://' . $href->getAttribute('href'),
+                'icon' => $icon,
+                'text' => $href->textContent
+            ];
+        }
+        return $links;
     }
 }

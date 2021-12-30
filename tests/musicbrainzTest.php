@@ -91,4 +91,19 @@ class musicbrainzTest extends TestCase
         $this->assertInstanceOf(seed\URL::class, $release->urls[0]);
     }
 
+    public function testDownloadFavicon()
+    {
+        $mb = new datagutten\musicbrainz\musicbrainz();
+        $files = $mb->download_favicons(sys_get_temp_dir());
+        $this->assertArrayHasKey('tidal', $files);
+        $this->assertFileExists($files['tidal']);
+    }
+
+    public function testExternalLinks()
+    {
+        $mb = new datagutten\musicbrainz\musicbrainz();
+        $links = $mb->get_release_links('896b6786-080f-44ac-bd18-fbdbee058cc3');
+        $this->assertIsArray($links);
+        $this->assertArrayHasKey('url', $links[0]);
+    }
 }

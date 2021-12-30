@@ -6,6 +6,7 @@ namespace datagutten\musicbrainz\seed;
 
 class Track extends Element
 {
+    public static string $entity = 'track';
     protected array $fields = ['id', 'title', 'number', 'length'];
     /**
      * @var string Recording MBID

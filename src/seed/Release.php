@@ -8,6 +8,7 @@ use DateTime;
 
 class Release extends Element
 {
+    public static string $entity = 'release';
     protected array $fields = ['id', 'title', 'type', 'status', 'script', 'packaging', 'edit_note', 'redirect_url', 'barcode'];
 
     /**

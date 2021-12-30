@@ -10,6 +10,10 @@ use RuntimeException;
 abstract class Element extends SimpleArrayAccess
 {
     /**
+     * @var string Entity name as used in MusicBrainz URL
+     */
+    public static string $entity;
+    /**
      * @var array Field names
      */
     protected array $fields = [];
@@ -25,6 +29,10 @@ abstract class Element extends SimpleArrayAccess
      * @var array Raw data from API
      */
     public array $data;
+    /**
+     * @var string MBID
+     */
+    public string $id;
 
     /**
      * Register valid arguments as properties
@@ -72,5 +80,14 @@ abstract class Element extends SimpleArrayAccess
             }
         }
         return $data;
+    }
+
+    /**
+     * Get MusicBrainz URL
+     * @return string
+     */
+    public function link(): string
+    {
+        return sprintf('https://musicbrainz.org/%s/%s', static::$entity, $this->id);
     }
 }

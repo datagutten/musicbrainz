@@ -6,6 +6,7 @@ namespace datagutten\musicbrainz\seed;
 
 class URL extends Element
 {
+    public static string $entity = 'url';
     protected array $fields = ['id', 'url', 'link_type', 'type'];
 
     /**

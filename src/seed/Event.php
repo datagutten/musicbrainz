@@ -8,6 +8,7 @@ use DateTime;
 
 class Event extends Element
 {
+    public static string $entity = 'event';
     /**
      * @var DateTime Event date
      */

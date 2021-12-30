@@ -5,7 +5,6 @@ namespace datagutten\musicbrainz\seed;
 
 
 use datagutten\musicbrainz\SimpleArrayAccess;
-use RuntimeException;
 
 abstract class Element extends SimpleArrayAccess
 {
@@ -16,7 +15,7 @@ abstract class Element extends SimpleArrayAccess
     /**
      * @var array Field names
      */
-    protected array $fields = [];
+    protected array $fields;
     /**
      * @var array Field name aliases for release editor seeding. API field name as key, seed field name as value
      */
@@ -41,8 +40,6 @@ abstract class Element extends SimpleArrayAccess
     public function register_fields(array $args)
     {
         $this->data = $args; //Save raw data
-        if (empty($this->fields))
-            throw new RuntimeException('No fields found');
 
         foreach ($this->fields as $field)
         {

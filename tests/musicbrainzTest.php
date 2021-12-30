@@ -102,8 +102,15 @@ class musicbrainzTest extends TestCase
     public function testExternalLinks()
     {
         $mb = new datagutten\musicbrainz\musicbrainz();
-        $links = $mb->get_release_links(new seed\Release(['id' => '896b6786-080f-44ac-bd18-fbdbee058cc3']));
+        $links = $mb->get_links(new seed\Release(['id' => '896b6786-080f-44ac-bd18-fbdbee058cc3']));
         $this->assertIsArray($links);
-        $this->assertArrayHasKey('url', $links[0]);
+        foreach ($links as $link)
+        {
+            $this->assertArrayHasKey('url', $link);
+            if ($link['icon'] == 'applemusic')
+                $this->assertEquals('https://music.apple.com/no/album/1443392780', $link['url']);
+            elseif ($link['icon'] == 'tidal')
+                $this->assertEquals('https://tidal.com/album/1315017', $link['url']);
+        }
     }
 }

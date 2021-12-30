@@ -482,9 +482,12 @@ class musicbrainz
             $icon = $link->getAttribute('class');
             $icon = preg_replace('/(.+)-favicon/', '$1', $icon);
             $href = $link->firstChild;
+            $url = $href->getAttribute('href');
+            if (substr($url, 0, 2) == '//')
+                $url = 'https:' . $url;
 
             $links[] = [
-                'url' => 'https://' . $href->getAttribute('href'),
+                'url' => $url,
                 'icon' => $icon,
                 'text' => $href->textContent
             ];

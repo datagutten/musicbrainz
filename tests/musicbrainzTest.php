@@ -72,4 +72,23 @@ class musicbrainzTest extends TestCase
         $this->assertEquals('Intronasjonalen', $release->mediums[0]->tracks[0]->title);
         $this->assertEquals('9d9e6138-118e-41ea-8ec0-fdfe85f40e04', $release->mediums[0]->tracks[0]->id);
     }
+
+    public function testReleaseLinks()
+    {
+        $mb = new datagutten\musicbrainz\musicbrainz();
+        $release = $mb->releaseFromMBID('4f8b5b4d-4afa-4906-8ad9-4173c59f61eb', ['url-rels']);
+        $this->assertInstanceOf(seed\Release::class, $release);
+        $this->assertNotEmpty($release->urls);
+        $this->assertInstanceOf(seed\URL::class, $release->urls[0]);
+    }
+
+    public function testReleaseLinks2()
+    {
+        $mb = new datagutten\musicbrainz\musicbrainz();
+        $release = $mb->releaseFromMBID('b042ebf3-f3d0-4557-abd5-b568fbdc85c4', ['url-rels', 'release-group-rels', 'release-group-level-rels']);
+        $this->assertInstanceOf(seed\Release::class, $release);
+        $this->assertNotEmpty($release->urls);
+        $this->assertInstanceOf(seed\URL::class, $release->urls[0]);
+    }
+
 }

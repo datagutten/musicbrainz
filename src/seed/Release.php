@@ -87,6 +87,18 @@ class Release extends Element
         {
             $this->medium($medium);
         }
+
+        foreach ($args['relations'] ?? [] as $relation)
+        {
+            if ($relation['target-type'] != 'url')
+                continue;
+
+            $this->url([
+                'id' => $relation['url']['id'],
+                'url' => $relation['url']['resource'],
+                'type' => $relation['type'],
+            ]);
+        }
     }
 
     public function artist($args): Artist

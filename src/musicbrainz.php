@@ -465,13 +465,13 @@ class musicbrainz
     }
 
     /**
-     * Scrape external links with icons from release page
-     * @param string $mbid Release MBID
+     * Scrape external links with icons from a MusicBrainz page
+     * @param seed\Element $entity Entity class
      * @return array
      */
-    public function get_release_links(string $mbid): array
+    public function get_release_links(seed\Element $entity): array
     {
-        $response = $this->get('https://musicbrainz.org/release/' . $mbid);
+        $response = $this->get($entity->link());
         $dom = new DOMDocument();
         @$dom->loadHTML($response->body);
         $xpath = new DOMXPath($dom);

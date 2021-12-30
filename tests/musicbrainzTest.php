@@ -102,7 +102,7 @@ class musicbrainzTest extends TestCase
     public function testExternalLinks()
     {
         $mb = new datagutten\musicbrainz\musicbrainz();
-        $links = $mb->get_release_links('896b6786-080f-44ac-bd18-fbdbee058cc3');
+        $links = $mb->get_release_links(new seed\Release(['id' => '896b6786-080f-44ac-bd18-fbdbee058cc3']));
         $this->assertIsArray($links);
         $this->assertArrayHasKey('url', $links[0]);
     }

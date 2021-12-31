@@ -5,6 +5,9 @@ namespace datagutten\musicbrainz\objects;
 use datagutten\musicbrainz\seed\Artist;
 use datagutten\musicbrainz\seed\Element;
 
+/**
+ * @deprecated Use seed\Track
+ */
 class Recording extends Element
 {
     /**

@@ -6,7 +6,6 @@ namespace datagutten\musicbrainz;
 
 use Composer\InstalledVersions;
 use datagutten\musicbrainz\exceptions\NotFound;
-use datagutten\musicbrainz\objects\Recording;
 use datagutten\musicbrainz\seed\Artist;
 use datagutten\musicbrainz\seed\Release;
 use datagutten\tools\files\files;
@@ -154,21 +153,21 @@ class musicbrainz
      * Get recording from MBID
      * @param string $mbid Recording MBID
      * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)
-     * @return Recording Recording object
+     * @return seed\Track Recording object
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz
      * @throws exceptions\NotFound Recording not found
      */
-    public function recordingFromMBID(string $mbid, array $inc = ['artists']): Recording
+    public function recordingFromMBID(string $mbid, array $inc = ['artists']): seed\Track
     {
         $data = $this->lookup('recording', $mbid, $inc);
-        return new Recording($data);
+        return new seed\Track($data);
     }
 
     /**
      * Find recordings by ISRC
      * @param string $isrc ISRC to find
      * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)
-     * @return Recording[] Array with recording objects
+     * @return seed\Track[] Array with recording objects
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
      * @throws exceptions\NotFound Recording not found
      */
@@ -180,7 +179,7 @@ class musicbrainz
             throw new NotFound('No recordings found for ISRC ' . $isrc);
         foreach ($data['recordings'] as $recording)
         {
-            $recordings[] = new Recording($recording);
+            $recordings[] = new seed\Track($recording);
         }
         return $recordings;
     }
@@ -230,7 +229,7 @@ class musicbrainz
     /**
      * Find recording by ISRC and cache the result
      * @param string $isrc ISRC to find
-     * @return Recording[] Array with recording objects
+     * @return seed\Track[] Array with recording objects
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
      * @throws exceptions\NotFound Recording not found
      */
@@ -250,7 +249,7 @@ class musicbrainz
 
         foreach ($data['recordings'] as $recording)
         {
-            $recordings[] = new Recording($recording);
+            $recordings[] = new seed\Track($recording);
         }
         return $recordings;
     }

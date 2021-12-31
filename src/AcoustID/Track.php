@@ -4,7 +4,7 @@
 namespace datagutten\musicbrainz\AcoustID;
 
 
-use datagutten\musicbrainz\objects\Recording;
+use datagutten\musicbrainz\seed;
 use datagutten\musicbrainz\SimpleArrayAccess;
 
 class Track extends SimpleArrayAccess
@@ -26,7 +26,7 @@ class Track extends SimpleArrayAccess
      */
     public string $id;
     /**
-     * @var Recording[] Recordings
+     * @var seed\Track[] Recordings
      */
     public array $recordings = [];
 
@@ -37,7 +37,7 @@ class Track extends SimpleArrayAccess
         {
             foreach ($data['recordings'] as $recording)
             {
-                $this->recordings[] = new Recording($recording);
+                $this->recordings[] = new seed\Track($recording);
             }
         }
     }

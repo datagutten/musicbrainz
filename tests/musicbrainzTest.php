@@ -2,7 +2,6 @@
 
 
 use datagutten\musicbrainz\exceptions\MusicBrainzErrorException;
-use datagutten\musicbrainz\objects;
 use datagutten\musicbrainz\seed;
 use datagutten\tools\files\files;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +23,7 @@ class musicbrainzTest extends TestCase
         $data = $mb->recordingsFromISRC('NOUM70600600');
         $this->assertIsArray($data);
         $this->assertSame('Det snør, det snør, tiddelibom', $data[0]['title']);
-        $this->assertInstanceOf(objects\Recording::class, $data[0]);
+        $this->assertInstanceOf(seed\Track::class, $data[0]);
     }
 
     /**
@@ -49,7 +48,7 @@ class musicbrainzTest extends TestCase
     {
         $mb = new datagutten\musicbrainz\musicbrainz();
         $recording = $mb->recordingFromMBID('6a8acac2-14e1-4c97-8b4d-e52efe9f36ab');
-        $this->assertInstanceOf(\datagutten\musicbrainz\objects\Recording::class, $recording);
+        $this->assertInstanceOf(seed\Track::class, $recording);
         $this->assertEquals('Bam Bam', $recording->title);
         $this->assertEquals('King Charles', $recording->artists[0]->artist_name);
     }

@@ -112,4 +112,13 @@ class musicbrainzTest extends TestCase
                 $this->assertEquals('https://tidal.com/album/1315017', $link['url']);
         }
     }
+
+    public function testReleaseRelation()
+    {
+        $mb = new datagutten\musicbrainz\musicbrainz();
+        $release = $mb->releaseFromMBID('99ed91bd-1c6b-457a-9cdb-041c3f74468d', ['url-rels', 'recording-rels', 'artist-rels', 'artists', 'series-rels']);
+        $this->assertIsArray($release->relations);
+        $this->assertInstanceOf(seed\Artist::class, $release->relations[0]->target);
+        $this->assertEquals('Giert Clausen', $release->relations[0]->target->name);
+    }
 }

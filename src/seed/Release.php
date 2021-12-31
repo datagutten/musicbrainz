@@ -50,6 +50,12 @@ class Release extends Element
      * @var Medium[] Release mediums containing tracks
      */
     public array $mediums = [];
+
+    /**
+     * @var Relation[]
+     */
+    public array $relations;
+
     /**
      * @var string Edit note
      */
@@ -91,14 +97,13 @@ class Release extends Element
 
         foreach ($args['relations'] ?? [] as $relation)
         {
-            if ($relation['target-type'] != 'url')
-                continue;
-
-            $this->url([
-                'id' => $relation['url']['id'],
-                'url' => $relation['url']['resource'],
-                'type' => $relation['type'],
-            ]);
+            $this->relation($relation);
+            if ($relation['target-type'] == 'url')
+                $this->url([
+                    'id' => $relation['url']['id'],
+                    'url' => $relation['url']['resource'],
+                    'type' => $relation['type'],
+                ]);
         }
     }
 
@@ -135,6 +140,13 @@ class Release extends Element
         $medium = new Medium($args);
         $this->mediums[] = $medium;
         return $medium;
+    }
+
+    public function relation($args): Relation
+    {
+        $relation = new Relation($args);
+        $this->relations[] = $relation;
+        return $relation;
     }
 
     /*    public function trackList()

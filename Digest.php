@@ -38,8 +38,8 @@ class Requests_Auth_Digest implements Requests\Auth
      *
      * @var array
      */
-	private $request;
-    private $response_sent = false;
+    private array $request;
+    private bool $response_sent = false;
 
     /**
      * Constructor

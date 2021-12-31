@@ -1,7 +1,7 @@
 <?php
 
 
-use datagutten\musicbrainz\exceptions\MusicBrainzErrorException;
+use datagutten\musicbrainz\exceptions;
 use datagutten\musicbrainz\seed;
 use datagutten\tools\files\files;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +27,7 @@ class musicbrainzTest extends TestCase
     }
 
     /**
-     * @throws MusicBrainzErrorException
+     * @throws exceptions\MusicBrainzErrorException|exceptions\NotFound
      * @requires PHPUnit >=9.5
      */
     public function testLookup_isrc_cache()
@@ -57,7 +57,7 @@ class musicbrainzTest extends TestCase
     {
         $mb = new datagutten\musicbrainz\musicbrainz();
         $artist = $mb->artistFromMBID('fed809c7-6615-4d9f-8295-48ecec946e72');
-        $this->assertInstanceOf(\datagutten\musicbrainz\seed\Artist::class, $artist);
+        $this->assertInstanceOf(seed\Artist::class, $artist);
         $this->assertInstanceOf(seed\Release::class, $artist->releases[0]);
         $this->assertEquals('King Charles', $artist->name);
     }

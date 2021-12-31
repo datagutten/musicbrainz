@@ -3,6 +3,7 @@
 namespace datagutten\musicbrainz\AcoustID;
 
 use datagutten\musicbrainz\SimpleArrayAccess;
+use FileNotFoundException;
 
 class Submission extends SimpleArrayAccess
 {
@@ -53,6 +54,12 @@ class Submission extends SimpleArrayAccess
      */
     public int $discno;
 
+    /**
+     * Create submission object with fingerprint from audio file
+     * @param string $file Audio file
+     * @return Submission
+     * @throws FileNotFoundException
+     */
     public static function fromFile(string $file): Submission
     {
         $submission = new static();

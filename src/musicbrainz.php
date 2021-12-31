@@ -349,11 +349,11 @@ class musicbrainz
      * @throws exceptions\MusicBrainzErrorException
      * @throws exceptions\MusicBrainzException
      */
-	function send_isrc_list(string $xml, $client='')
-	{
-	    if(empty($client))
-            $client = 'datagutten-musicbrainz-'.$this->version;
-	    $client = urlencode($client);
+	function send_isrc_list(string $xml, string $client = '')
+    {
+        if (empty($client))
+            $client = 'datagutten-musicbrainz-' . $this->version;
+        $client = urlencode($client);
 
         try
         {

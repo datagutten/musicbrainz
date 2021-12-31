@@ -255,23 +255,6 @@ class musicbrainz
     }
 
     /**
-     * Find the first flac file in a folder
-     * @param string $dir Directory to search
-     * @return string File name
-     * @throws exceptions\MusicBrainzException File not found
-     */
-	public static function firstfile(string $dir): string
-    {
-		$file=glob(sprintf('/%s/01*.flac',$dir));
-		if(!empty($file))
-			return $file[0];
-		elseif(!empty($file=glob(sprintf('/%s/1-01*.flac',$dir))))
-			return $file[0];
-		else
-            throw new exceptions\MusicBrainzException('Unable to find first file in '.$dir);
-	}
-
-    /**
      * Get tags
      * @param SimpleXMLElement $xml
      * @return array

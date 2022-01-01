@@ -123,4 +123,13 @@ class musicbrainzTest extends TestCase
         $this->assertInstanceOf(seed\Artist::class, $release->relations[0]->target);
         $this->assertEquals('Giert Clausen', $release->relations[0]->target->name);
     }
+
+    public function testBadISRCCacheFolder()
+    {
+        if (PHP_OS == 'WINNT')
+            $this->markTestSkipped();
+
+        $this->expectOutputString('Unable to create ISRC cache folder at /dev/null/foo');
+        new datagutten\musicbrainz\musicbrainz(['isrc_cache_folder' => '/dev/null/foo']);
+    }
 }

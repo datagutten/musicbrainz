@@ -32,6 +32,10 @@ abstract class Element extends SimpleArrayAccess
      * @var string MBID
      */
     public string $id;
+    /**
+     * @var Relation[] Entity relations
+     */
+    public array $relations;
 
     /**
      * Register valid arguments as properties
@@ -53,6 +57,24 @@ abstract class Element extends SimpleArrayAccess
             if (!empty($args[$alias]))
                 $this->$field = $args[$alias];
         }
+
+        //Register relations if present
+        foreach ($this->data['relations'] ?? [] as $relation)
+        {
+            $this->relation($relation);
+        }
+    }
+
+    /**
+     * Add a relation
+     * @param $args
+     * @return Relation
+     */
+    public function relation($args): Relation
+    {
+        $relation = new Relation($args);
+        $this->relations[] = $relation;
+        return $relation;
     }
 
     /**

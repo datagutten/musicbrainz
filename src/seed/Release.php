@@ -52,11 +52,6 @@ class Release extends Element
     public array $mediums = [];
 
     /**
-     * @var Relation[]
-     */
-    public array $relations;
-
-    /**
      * @var string Edit note
      */
     public string $edit_note;
@@ -97,7 +92,6 @@ class Release extends Element
 
         foreach ($args['relations'] ?? [] as $relation)
         {
-            $this->relation($relation);
             if ($relation['target-type'] == 'url')
                 $this->url([
                     'id' => $relation['url']['id'],
@@ -140,13 +134,6 @@ class Release extends Element
         $medium = new Medium($args);
         $this->mediums[] = $medium;
         return $medium;
-    }
-
-    public function relation($args): Relation
-    {
-        $relation = new Relation($args);
-        $this->relations[] = $relation;
-        return $relation;
     }
 
     /*    public function trackList()

@@ -23,7 +23,8 @@
     ],
     "autoload": {
       "psr-4": {
-        "datagutten\\musicbrainz\\": "src"
+          "datagutten\\musicbrainz\\": "src",
+          "datagutten\\musicbrainz_tests\\": "tests"
       },
         "classmap": ["Digest.php"]
     },

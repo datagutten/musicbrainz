@@ -1,6 +1,6 @@
 <?php
 
-namespace seed;
+namespace datagutten\musicbrainz_tests\seed;
 
 use datagutten\musicbrainz\seed;
 use PHPUnit\Framework\TestCase;

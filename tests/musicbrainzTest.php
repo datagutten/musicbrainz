@@ -1,6 +1,8 @@
 <?php
 
+namespace datagutten\musicbrainz_tests;
 
+use datagutten;
 use datagutten\musicbrainz\exceptions;
 use datagutten\musicbrainz\seed;
 use datagutten\tools\files\files;

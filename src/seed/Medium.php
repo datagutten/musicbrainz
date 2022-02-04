@@ -35,6 +35,7 @@ class Medium extends Element
         foreach ($args['tracks'] ?? [] as $track)
         {
             $track['id'] = $track['recording']['id'];
+            unset($track['recording']);
             $this->track($track);
         }
     }

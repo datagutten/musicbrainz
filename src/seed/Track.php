@@ -8,6 +8,7 @@ class Track extends Element
 {
     public static string $entity = 'track';
     protected array $fields = ['id', 'title', 'number', 'length'];
+    protected array $field_aliases = ['id' => 'recording', 'title' => 'name'];
     /**
      * @var string Recording MBID
      */

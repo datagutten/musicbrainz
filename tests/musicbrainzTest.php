@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace datagutten\musicbrainz_tests;
 
@@ -10,15 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class musicbrainzTest extends TestCase
 {
-
-    public function testLookup_isrc()
-    {
-        $mb = new datagutten\musicbrainz\musicbrainz();
-        $data = $mb->lookup_isrc('NOUM70600600');
-        $this->assertIsArray($data['recordings']);
-        $this->assertSame('Det snør, det snør, tiddelibom', $data['recordings'][0]['title']);
-    }
-
     public function testRecordingsFromISRC()
     {
         $mb = new datagutten\musicbrainz\musicbrainz();
@@ -131,5 +122,12 @@ class musicbrainzTest extends TestCase
 
         $this->expectOutputString('Unable to create ISRC cache folder at /dev/null/foo');
         new datagutten\musicbrainz\musicbrainz(['isrc_cache_folder' => '/dev/null/foo']);
+    }
+
+    public function testLimit()
+    {
+        $mb = new datagutten\musicbrainz\Browse();
+        $releases = $mb->releases('label', '36a73024-201f-4833-87b1-275bc609383e', limit: 100);
+        $this->assertGreaterThan(25, count($releases));
     }
 }

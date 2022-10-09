@@ -12,7 +12,7 @@
         "symfony/polyfill-php80": "^1.23",
         "symfony/process": "^5.3",
         "datagutten/audio-metadata": "^3.1",
-        "php": "^7.4|^8.0"
+        "php": "^8.0"
     },
     "license": "GPL-3.0-or-later",
     "authors": [

@@ -150,6 +150,36 @@ class musicbrainz
     }
 
     /**
+     * Get object from MusicBrainz API
+     * @param string $result_entity Entity type to fetch
+     * @param string $query_entity Entity type to query
+     * @param string $value Query value (MBID)
+     * @param int $limit Result limit (default 25)
+     * @param int $limit Result offset
+    * @param array $inc Include fields
+     * @return array
+     * @throws NotFound Query returned HTTP 404
+     * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
+     */
+    protected function browse(string $result_entity, string $query_entity, string $value, int $limit = null, int $offset = null, array $inc = []): array
+    {
+        if (!empty($inc))
+            $args['inc'] = implode('+', $inc);
+
+        if (!empty($limit))
+            $args['limit'] = $limit;
+
+        if (!empty($offset))
+            $args['offset'] = $offset;
+
+        $args[$query_entity] = $value;
+
+        $args = http_build_query($args ?? []);
+        $url = sprintf('/%s?%s', $result_entity, $args);
+        return $this->api_request($url, true);
+    }
+
+    /**
      * Get recording from MBID
      * @param string $mbid Recording MBID
      * @param string[] $inc Include fields (artists, releases, isrcs or url-rels)

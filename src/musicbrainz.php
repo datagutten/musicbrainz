@@ -262,6 +262,7 @@ class musicbrainz
      * @return seed\Track[] Array with recording objects
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
      * @throws exceptions\NotFound Recording not found
+     * @deprecated Rewrite to return object?
      */
     function lookup_isrc_cache(string $isrc): array
     {
@@ -288,6 +289,7 @@ class musicbrainz
      * Get tags
      * @param SimpleXMLElement $xml
      * @return array
+     * @deprecated TODO: Rewrite as release object property?
      */
 	function tags(SimpleXMLElement $xml): array
     {

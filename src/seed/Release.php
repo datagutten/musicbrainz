@@ -69,13 +69,19 @@ class Release extends Element
             $artist = [
                 'artist_name' => $artist['artist']['name'],
                 'id' => $artist['artist']['id'],
-                'type' => $artist['artist']['type'],
+                'type' => $artist['artist']['type'] ?? null,
                 'name' => $artist['name'],
-                'disambiguation' => $artist['artist']['disambiguation'],
+                'disambiguation' => $artist['artist']['disambiguation'] ?? null,
                 'sort_name' => $artist['artist']['sort-name'],
-                'join_phrase' => $artist['joinphrase'],
+                'join_phrase' => $artist['joinphrase'] ?? null,
             ];
             $this->artist($artist);
+        }
+
+        foreach ($args['label-info'] ?? [] as $label)
+        {
+            $label['label']['catalog_number'] = $label['catalog-number'];
+            $this->labels[] = new Label($label['label']);
         }
 
         foreach ($args['release-events'] ?? [] as $event)

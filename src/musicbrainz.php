@@ -317,7 +317,7 @@ class musicbrainz
         $dom=new DOMDocumentCustom;
         $dom->formatOutput=true;
 
-        $metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
+        $metadata=$dom->createElement_simple('metadata', null, array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
         $recording_list=$dom->createElement_simple('recording-list',$metadata);
 
         foreach($array as $recording_id=>$isrc)
@@ -349,7 +349,7 @@ class musicbrainz
 		{
             throw new InvalidArgumentException('$release does not contain mediums');
 		}
-		$metadata=$dom->createElement_simple('metadata',false,array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
+		$metadata=$dom->createElement_simple('metadata', null, array('xmlns'=>'http://musicbrainz.org/ns/mmd-2.0#'));
 		$recording_list=$dom->createElement_simple('recording-list',$metadata);
 		$medium_number=1;
 		foreach($release->{'release'}->{'medium-list'}->medium as $medium)

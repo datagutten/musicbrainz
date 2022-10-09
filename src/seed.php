@@ -33,12 +33,12 @@ class seed
         $this->form = $this->dom->createElement_simple('form', $this->body, array('method' => 'POST', 'action' => 'https://musicbrainz.org/release/add'));
 		$this->fieldset=$this->dom->createElement_simple('fieldset',$this->form);
 		$this->dom->createElement_simple('input',$this->form,array('type'=>'submit','value'=>'seed'));
-		$this->dom->createElement_simple('legend',$this->fieldset,false,'Release information');
+		$this->dom->createElement_simple('legend',$this->fieldset, null, 'Release information');
 	}
 	public function fieldset($legend)
 	{
 		$this->fieldset=$this->dom->createElement_simple('fieldset',$this->form);
-		$this->dom->createElement_simple('legend',$this->fieldset,false,$legend);
+		$this->dom->createElement_simple('legend',$this->fieldset, null, $legend);
 	}
 
 	public function show_page()
@@ -61,6 +61,6 @@ class seed
 	}
 	function message($message)
 	{
-		$this->dom->createElement_simple('p', $this->fieldset, false, $message);
+		$this->dom->createElement_simple('p', $this->fieldset, null, $message);
 	}
 }

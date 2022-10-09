@@ -391,6 +391,7 @@ class musicbrainz
         {
             $options = array('auth' => new Requests_Auth_Digest(array($this->config['mb_username'], $this->config['mb_password'])));
             $response = $this->session->post('/ws/2/recording/?client=' . $client . '&fmt=json', array('Content-Type' => 'text/xml'), $xml, $options);
+            self::handle_response($response);
         }
         catch (Requests\Exception $e)
         {

@@ -5,3 +5,7 @@ config.php
 coverage_html
 clover.xml
 cache
+isrc_cache
+.idea
+.env
+.phpunit.result.cache

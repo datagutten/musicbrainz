@@ -15,6 +15,6 @@ class TrackTest extends TestCase
         $this->assertInstanceOf(Artist::class, $artist);
         $seed = $track->save('test.');
         $this->assertEquals('61533837-6c9d-410d-aadf-f3b5d4a5234e', $seed['test.artist_credit.names.0.mbid']);
-        $this->assertEquals('8dda590c-54c0-4965-a202-208cf061ba0b', $seed['test.mbid']);
+        $this->assertEquals('8dda590c-54c0-4965-a202-208cf061ba0b', $seed['test.recording']);
     }
 }

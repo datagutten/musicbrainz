@@ -4,7 +4,7 @@
 namespace datagutten\musicbrainz;
 
 
-use datagutten\musicbrainz\seed\Release;
+use datagutten\musicbrainz\seed as entity;
 
 class Search extends musicbrainz
 {
@@ -45,7 +45,7 @@ class Search extends musicbrainz
 
     /**
      * @param ...$args
-     * @return Release[]
+     * @return entity\Release[]
      * @throws exceptions\MusicBrainzErrorException
      * @throws exceptions\NotFound
      */
@@ -58,7 +58,7 @@ class Search extends musicbrainz
         $releases = [];
         foreach ($response['releases'] as $release)
         {
-            $releases[] = new Release($release);
+            $releases[] = new entity\Release($release);
         }
         return $releases;
     }

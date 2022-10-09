@@ -108,6 +108,30 @@ class AcoustID
     }
 
     /**
+     * Lookup an array of fingerprints
+     * @param Fingerprint[] $fingerprints
+     * @param string[] $meta
+     * @return Track[]
+     * @throws AcoustIdException Something went wrong
+     */
+    public function lookupMulti(array $fingerprints, array $meta = ['recordings']): array
+    {
+        $tracks = [];
+        foreach ($fingerprints as $fingerprint)
+        {
+            try
+            {
+                $tracks[] = $this->lookup($fingerprint);
+            }
+            catch (NotFound $e)
+            {
+                continue;
+            }
+        }
+        return $tracks;
+    }
+
+    /**
      * Lookup a file on AcoustID
      * @param string $file File path
      * @param bool $single_result Return only best match

@@ -480,4 +480,25 @@ class musicbrainz
         }
         return $links;
     }
+
+    /**
+     * Get album cover art
+     * @param string|Release $release Release MBID or object
+     * @return CoverArt
+     * @throws exceptions\MusicBrainzException
+     */
+    public function cover(Release|string $release): CoverArt
+    {
+        if (is_object($release))
+            $release = $release->id;
+        try
+        {
+            $response = $this->get('https://coverartarchive.org/release/' . $release);
+            return new CoverArt($response->decode_body());
+        }
+        catch (Requests\Exception $e)
+        {
+            throw new exceptions\MusicBrainzException(sprintf('Error fetching cover art info: %s', $e->getMessage()), $e->getCode(), $e);
+        }
+    }
 }

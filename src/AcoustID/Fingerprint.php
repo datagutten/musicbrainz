@@ -2,7 +2,7 @@
 
 namespace datagutten\musicbrainz\AcoustID;
 
-use datagutten\musicbrainz\SimpleArrayAccess;
+use datagutten\tools\SimpleArrayAccess;
 use FileNotFoundException;
 use Symfony\Component\Process\Process;
 

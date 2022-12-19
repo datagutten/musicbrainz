@@ -5,7 +5,7 @@ namespace datagutten\musicbrainz\AcoustID;
 
 
 use datagutten\musicbrainz\seed;
-use datagutten\musicbrainz\SimpleArrayAccess;
+use datagutten\tools\SimpleArrayAccess;
 
 class Track extends SimpleArrayAccess
 {

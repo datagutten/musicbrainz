@@ -2,7 +2,7 @@
 
 namespace datagutten\musicbrainz\AcoustID;
 
-use datagutten\musicbrainz\SimpleArrayAccess;
+use datagutten\tools\SimpleArrayAccess;
 use FileNotFoundException;
 
 class Submission extends SimpleArrayAccess

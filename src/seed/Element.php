@@ -4,7 +4,7 @@
 namespace datagutten\musicbrainz\seed;
 
 
-use datagutten\musicbrainz\SimpleArrayAccess;
+use datagutten\tools\SimpleArrayAccess;
 
 abstract class Element extends SimpleArrayAccess
 {

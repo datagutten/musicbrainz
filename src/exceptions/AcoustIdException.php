@@ -4,9 +4,7 @@
 namespace datagutten\musicbrainz\exceptions;
 
 
-use Exception;
-
-class AcoustIdException extends Exception
+class AcoustIdException extends MusicBrainzException
 {
 
 }

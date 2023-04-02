@@ -139,14 +139,15 @@ class musicbrainz
      * @param string $entity Entity
      * @param string $value Query value (MBID)
      * @param array $inc Include fields
+     * @param int $limit Result count limit (default 25)
      * @return array
      * @throws NotFound Query returned HTTP 404
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
      */
-    protected function lookup(string $entity, string $value, array $inc): array
+    protected function lookup(string $entity, string $value, array $inc, int $limit = 25): array
     {
-        return $this->api_request(sprintf('/%s/%s?inc=%s', $entity, $value,
-            implode('+', $inc)), true);
+        return $this->api_request(sprintf('/%s/%s?inc=%s&limit=%d', $entity, $value,
+            implode('+', $inc), $limit), true);
     }
 
     /**

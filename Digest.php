@@ -130,7 +130,7 @@ class Requests_Auth_Digest implements Requests\Auth
 
         $digest_response = md5(sprintf('%s:%s:%s:%s:%s:%s', $a1, $nonce, $nc, $cnonce, $qop, $a2));
 
-        $header = sprintf('Digest username="%s",realm="%s",nonce="%s",uri="%s",cnonce="%s",nc=%s,algorithm=MD5,response="%s",qop="%s",opaque="%s"',
+        return sprintf('Digest username="%s",realm="%s",nonce="%s",uri="%s",cnonce="%s",nc=%s,algorithm=MD5,response="%s",qop="%s",opaque="%s"',
             $this->user,
             $realm,
             $nonce,
@@ -140,7 +140,6 @@ class Requests_Auth_Digest implements Requests\Auth
             $digest_response,
             $qop,
             $opaque);
-        return $header;
     }
 
 	/**

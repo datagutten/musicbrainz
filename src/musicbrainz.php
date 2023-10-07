@@ -495,6 +495,8 @@ class musicbrainz
         try
         {
             $response = $this->get('https://coverartarchive.org/release/' . $release);
+            if ($response->status_code == 404)
+                throw new exceptions\MusicBrainzException(sprintf('No cover art for MBID %s', $release));
             return new CoverArt($response->decode_body());
         }
         catch (Requests\Exception $e)

@@ -47,7 +47,7 @@ abstract class Element extends SimpleArrayAccess
 
         foreach ($this->fields as $field)
         {
-            if (!empty($args[$field]))
+            if (isset($args[$field]))
                 $this->$field = $args[$field];
         }
 

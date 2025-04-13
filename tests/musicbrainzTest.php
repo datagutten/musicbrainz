@@ -15,7 +15,7 @@ class musicbrainzTest extends TestCase
         $mb = new datagutten\musicbrainz\musicbrainz();
         $data = $mb->recordingsFromISRC('NOUM70600600');
         $this->assertIsArray($data);
-        $this->assertSame('Det snør, det snør, tiddelibom', $data[0]['title']);
+        $this->assertSame('Det sner, det sner, tiddeli bom', $data[0]['title']);
         $this->assertInstanceOf(seed\Track::class, $data[0]);
     }
 
@@ -31,10 +31,10 @@ class musicbrainzTest extends TestCase
         @unlink($isrc_cache_file);
         $this->assertFileDoesNotExist($isrc_cache_file);
         $data = $mb->lookup_isrc_cache('NOUM70600600');
-        $this->assertSame('Det snør, det snør, tiddelibom', $data[0]['title']);
+        $this->assertSame('Det sner, det sner, tiddeli bom', $data[0]['title']);
         $this->assertFileExists($isrc_cache_file);
         $data_cache = json_decode(file_get_contents($isrc_cache_file), true);
-        $this->assertSame('Det snør, det snør, tiddelibom', $data_cache['recordings'][0]['title']);
+        $this->assertSame('Det sner, det sner, tiddeli bom', $data_cache['recordings'][0]['title']);
     }
 
     public function testRecordingFromMBID()
@@ -60,7 +60,7 @@ class musicbrainzTest extends TestCase
         $mb = new datagutten\musicbrainz\musicbrainz();
         $release = $mb->releaseFromMBID('ae3c8989-1368-4f4f-a98d-8eb1cd94cd04', ['artists', 'recordings']);
         $this->assertInstanceOf(seed\Release::class, $release);
-        $this->assertEquals('D\'e Glede', $release->title);
+        $this->assertEquals('D\'e glede', $release->title);
         $this->assertEquals('Intronasjonalen', $release->mediums[0]->tracks[0]->title);
         $this->assertEquals('9d9e6138-118e-41ea-8ec0-fdfe85f40e04', $release->mediums[0]->tracks[0]->id);
     }

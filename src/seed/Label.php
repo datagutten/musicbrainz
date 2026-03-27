@@ -8,7 +8,15 @@ class Label extends Element
 {
     public static string $entity = 'label';
     public string $mbid;
+    /**
+     * @var string Label name
+     */
     public string $name;
+    /**
+     * @var string Alias for name
+     * @see self::$name
+     */
+    public string $title;
     public string $catalog_number;
     protected array $fields = ['id', 'catalog_number', 'name'];
 

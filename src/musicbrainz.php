@@ -437,8 +437,8 @@ class musicbrainz
      */
     public function download_favicons(string $path): array
     {
-        $response = $this->get('https://static.metabrainz.org/MB/icons-b3d83ac.css');
-        preg_match_all('#\.([a-z]+)-favicon\s?{background-image:url\(data:image/(\w+);base64,([a-zA-Z0-9+/=]+)#', $response->body, $matches);
+        $response = $this->get('https://static.metabrainz.org/MB/icons-738f6ce.css');
+        preg_match_all('#\.([a-z]+)-favicon\s?{background-image:url\("data:image/(\w+);base64,([a-zA-Z0-9+/=]+)"#', $response->body, $matches);
         $files = [];
         foreach (array_keys($matches[0]) as $key)
         {

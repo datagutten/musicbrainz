@@ -454,6 +454,7 @@ class musicbrainz
     /**
      * Scrape external links with icons from a MusicBrainz page
      * @param seed\Element $entity Entity class
+     * @deprecated Broken, use urls property of release object
      * @return array
      */
     public function get_links(seed\Element $entity): array

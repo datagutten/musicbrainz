@@ -60,7 +60,7 @@ class musicbrainzTest extends TestCase
         $mb = new datagutten\musicbrainz\musicbrainz();
         $release = $mb->releaseFromMBID('ae3c8989-1368-4f4f-a98d-8eb1cd94cd04', ['artists', 'recordings']);
         $this->assertInstanceOf(seed\Release::class, $release);
-        $this->assertEquals('D\'e glede', $release->title);
+        $this->assertEquals("D'e Glede (Kor Vil Du Dra I Dag?)", $release->title);
         $this->assertEquals('Intronasjonalen', $release->mediums[0]->tracks[0]->title);
         $this->assertEquals('9d9e6138-118e-41ea-8ec0-fdfe85f40e04', $release->mediums[0]->tracks[0]->id);
     }

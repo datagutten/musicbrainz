@@ -14,7 +14,7 @@ use WpOrg\Requests;
 class MusicBrainzErrorException extends MusicBrainzException
 {
     public Requests\Response $response;
-    public function __construct($message, $response, $code = 0, Exception $previous = null) {
+    public function __construct($message, $response, $code = 0, ?Exception $previous = null) {
         $this->response = $response;
         parent::__construct($message, $code, $previous);
     }

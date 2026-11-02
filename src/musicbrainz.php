@@ -155,14 +155,14 @@ class musicbrainz
      * @param string $result_entity Entity type to fetch
      * @param string $query_entity Entity type to query
      * @param string $value Query value (MBID)
-     * @param int $limit Result limit (default 25)
+     * @param int|null $limit Result limit (default 25)
      * @param int $limit Result offset
     * @param array $inc Include fields
      * @return array
      * @throws NotFound Query returned HTTP 404
      * @throws exceptions\MusicBrainzErrorException Error from MusicBrainz API
      */
-    protected function browse(string $result_entity, string $query_entity, string $value, int $limit = null, int $offset = null, array $inc = []): array
+    protected function browse(string $result_entity, string $query_entity, string $value, ?int $limit = null, ?int $offset = null, array $inc = []): array
     {
         if (!empty($inc))
             $args['inc'] = implode('+', $inc);

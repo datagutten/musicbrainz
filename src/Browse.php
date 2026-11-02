@@ -10,7 +10,7 @@ class Browse extends musicbrainz
      * Get releases related to the specified entity
      * @return entity\Release[]
      */
-    public function releases(string $entity, string $value, array $inc = [], int $limit=null): array
+    public function releases(string $entity, string $value, array $inc = [], ?int $limit=null): array
     {
         $result = $this->browse('release', $entity, $value, $limit, inc: $inc);
         $releases = [];
